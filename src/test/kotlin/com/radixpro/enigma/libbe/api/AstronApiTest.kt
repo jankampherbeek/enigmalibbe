@@ -38,11 +38,11 @@ internal class AstronApiTest {
         val jdUt = 2434406.8173611113
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
-        val houseSystem = HouseSystems.PLACIDUS
-        val result = api.calcBaseChart(jdUt, celPoints, houseSystem, location)
-        val errorTxt = result.errorTxt
-        errorTxt shouldHaveLength 0
-        val celPositions = result.baseChartPositions.celPositions
+        val request = BaseChartRequest(jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val response = api.calcBaseChart(request)
+        response.comments shouldHaveLength 0
+        response.errors shouldBe false
+        val celPositions = response.result.celPositions
         celPositions[0].celPoint shouldBe CelPoints.SUN
         celPositions[0].eclCoord.position shouldBe (309.1181602720 plusOrMinus margin)  //309.11816027204895
         celPositions[0].eclSpeed.position shouldBe (1.0153031475 plusOrMinus margin)
@@ -52,28 +52,33 @@ internal class AstronApiTest {
     fun `IT for calculating Epsilon should return correct result`() {
         val jdUt = 2434406.817713       // 1953-1-29 UT 7:37
         val expected = 23.4470723027
-        val result = api.calcEpsilon(jdUt)
-        result.position shouldBe (expected plusOrMinus margin)
-        result.errorTxt shouldHaveLength 0
+        val response = api.calcEpsilon(EpsilonRequest(jdUt))
+        response.comments shouldHaveLength 0
+        response.errors shouldBe false
+        response.result shouldBe (expected plusOrMinus margin)
     }
 
     @Test
     fun `IT for calculating Julian Day Nr should give correct result`() {
-        val dateTimeParts = DateTimeParts(1953,1,29,7,37,0,0.0, true)
+        val request = JdUtRequest(DateTimeParts(1953,1,29,7,37,0,0.0, true))
         val expected = 2434406.8173611113
-        val result = api.calcJdUt(dateTimeParts)
-        result.jdNumber shouldBe (expected plusOrMinus margin)
-        result.errorTxt shouldHaveLength 0
+        val response = api.calcJdUt(request)
+        response.comments shouldHaveLength 0
+        response.errors shouldBe false
+        response.result shouldBe (expected plusOrMinus margin)
+
     }
 
     @Test
     fun `IT for validating a correct date should return true`() {
-        api.isValidDate(1953, 1, 29, true) shouldBe true
+        val request = ValidDateRequest(1953, 1, 29, true)
+        api.isValidDate(request) shouldBe true
     }
 
     @Test
     fun `IT for validating an incorrect date should return false`() {
-        api.isValidDate(1953, 2, 29, true) shouldBe false
+        val request = ValidDateRequest(1953, 2, 29, true)
+        api.isValidDate(request) shouldBe false
     }
 
 

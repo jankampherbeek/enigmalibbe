@@ -18,28 +18,20 @@ class AstronApi {
 
     /**
      * Calculate a base chart.
-     * @param jdUt: julian day number for UT.
-     * @param celPoints: the celestial points to calculate.
-     * @param houseSystem: the housesystem to use.
-     * @param location: the geographical location.
      * @return the calculated BaseChart.
      */
-    fun calcBaseChart(jdUt: Double,
-                      celPoints: List<CelPoints>,
-                      houseSystem: HouseSystems,
-                      location: Location): BaseChartResponse {
+    fun calcBaseChart(request: BaseChartRequest): BaseChartResponse {
         val baseChartHandler = Injector.injectBaseChartHandler()
-        return baseChartHandler.calcBaseChartPositions(jdUt, celPoints, houseSystem, location)
+        return baseChartHandler.calcBaseChartPositions(request) as BaseChartResponse
     }
 
     /**
      * Calculate true Epsilon (Obliquity). True means corrected for nuation.
-     * @param jdUt: julian day number for UT.
      * @return the calculated value for Epsilon and an error text if an error occurred.
      */
-    fun calcEpsilon(jdUt: Double): EpsilonResponse {
+    fun calcEpsilon(request: EpsilonRequest): SingleDoubleResponse {
         val epsilonHandler = Injector.injectEpsilonHandler()
-        return epsilonHandler.calcTrueEpsilon(jdUt)
+        return epsilonHandler.calcTrueEpsilon(request) as SingleDoubleResponse
     }
 
     /**
@@ -47,18 +39,18 @@ class AstronApi {
      * @param dateTimeParts: the date and time.
      * @return the calculated value for the Julian day number and an error text if an error occurred.
      */
-    fun calcJdUt(dateTimeParts: DateTimeParts): JdResponse {
+    fun calcJdUt(request: JdUtRequest): SingleDoubleResponse {
         val dateTimeHandler = Injector.injectDateTimeHandler()
-        return dateTimeHandler.calcJdUt(dateTimeParts)
+        return dateTimeHandler.calcJdUt(request) as SingleDoubleResponse
     }
 
     /**
      * Checks the validty of a date. Takes the calendar (Gregorian or Julina) into account.
      * @param year: the year (astronomical, so BCE 1 is entered as 0 and BCE 2 is entered as -1 etc.
      */
-    fun isValidDate(year:Int, month: Int, day: Int, gregorian: Boolean): Boolean {
+    fun isValidDate(request: ValidDateRequest): Boolean {
         val dateTimeHandler = Injector.injectDateTimeHandler()
-        return dateTimeHandler.isValidDate(year, month, day, gregorian)
+        return dateTimeHandler.isValidDate(request)
     }
 
 }

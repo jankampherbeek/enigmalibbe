@@ -10,8 +10,17 @@ package com.radixpro.enigma.libbe.api
 
 import com.radixpro.enigma.libbe.domain.BaseChartPositions
 
-data class EpsilonResponse(val position: Double, val errorTxt: String)
+interface Response {
+    val result: Any
+    val errors: Boolean
+    val comments: String
+}
 
-data class JdResponse(val jdNumber: Double, val errorTxt: String)
+data class SingleDoubleResponse(override val result: Double,
+                           override val errors: Boolean,
+                           override val comments: String): Response
 
-data class BaseChartResponse(val baseChartPositions: BaseChartPositions, val errorTxt: String)
+data class BaseChartResponse(override val result: BaseChartPositions,
+                             override val errors: Boolean,
+                             override val comments: String): Response
+
