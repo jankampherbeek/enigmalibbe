@@ -34,7 +34,6 @@ class Epsilon(private val swissEph: SwissEph) {
      * Returns a Pair with the value for epsilon and an error message.
      */
     fun calcTrueEpsilon(jdUt: Double): Pair<Double, String> {
-
         val seId = -1
         val results = DoubleArray(6)
         val flags = 2   // use Swiss Ephemeris, default. Other flags are not applicable or not relevant.

@@ -40,6 +40,8 @@
 <!--        </repository>-->
 <!--    </repositories>-->
 
+
+
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
@@ -64,6 +66,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <args>
+                        <arg>-Xuse-ir</arg>
+                    </args>
+                </configuration>
             </plugin>
         </plugins>
     </build>
