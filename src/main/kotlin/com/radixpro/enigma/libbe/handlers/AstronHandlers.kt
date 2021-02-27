@@ -94,7 +94,7 @@ class EpsilonHandler(private val epsilon: Epsilon) {
 class DateTimeHandler(private val julianDayNr: JulianDayNr) {
 
     fun calcJdUt(request: Request): SingleDoubleResponse {
-        var calculatedJd: Double = 0.0
+        var calculatedJd = 0.0
         var comments = ""
         var errors = false
         val actRequest = request as JdUtRequest

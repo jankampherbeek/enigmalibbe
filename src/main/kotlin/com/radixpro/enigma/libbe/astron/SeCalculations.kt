@@ -46,7 +46,7 @@ class Epsilon(private val swissEph: SwissEph) {
 /**
  * Calculations for the Julian Day Number.
  */
-class JulianDayNr() {
+class JulianDayNr {
 
     /**
      * Calculate Julian Day for UT.
@@ -159,7 +159,7 @@ object CoordinateConversions {
      * @param eps The value for epsilon or obliquity, defining the angle between ecliptic and equator.
      * @return longitude in in decimal degrees, possible values 0 - &lt; 360.
      */
-    fun equatorialToEcliptic(ra: Double, eps: Double): Double {
+    fun rightAscToLongitude(ra: Double, eps: Double): Double {
         val workRA = Range.checkValue(ra)
         var lon = atan2(tan(workRA), cos(eps))
         lon = Range.checkValue(lon)

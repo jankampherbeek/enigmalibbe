@@ -8,7 +8,10 @@
 
 package com.radixpro.enigma.libbe.di
 
-import com.radixpro.enigma.libbe.astron.*
+import com.radixpro.enigma.libbe.astron.CelPointCalculator
+import com.radixpro.enigma.libbe.astron.Epsilon
+import com.radixpro.enigma.libbe.astron.HousesCalculator
+import com.radixpro.enigma.libbe.astron.JulianDayNr
 import com.radixpro.enigma.libbe.handlers.BaseChartHandler
 import com.radixpro.enigma.libbe.handlers.DateTimeHandler
 import com.radixpro.enigma.libbe.handlers.EpsilonHandler
@@ -19,24 +22,24 @@ import swisseph.SwissEph
  */
 object Injector {
 
-    fun injectSwissEph(): SwissEph {
+    private fun injectSwissEph(): SwissEph {
         val path = "./se"
         return SwissEph(path)
     }
 
-    fun injectEpsilon(): Epsilon {
+    private fun injectEpsilon(): Epsilon {
         return Epsilon(injectSwissEph())
     }
 
-    fun injectJulianDayNr(): JulianDayNr{
+    private fun injectJulianDayNr(): JulianDayNr{
         return JulianDayNr()
     }
 
-    fun injectCelPointCalculator(): CelPointCalculator {
+    private fun injectCelPointCalculator(): CelPointCalculator {
         return CelPointCalculator(injectSwissEph())
     }
 
-    fun injectHousesCalculator(): HousesCalculator {
+    private fun injectHousesCalculator(): HousesCalculator {
         return HousesCalculator(injectSwissEph())
     }
 

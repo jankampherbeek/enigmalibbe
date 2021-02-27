@@ -31,7 +31,7 @@ internal class HousesCalculatorTest {
     fun getPositionsForHouses() {
         val jdUt = 2434406.817713       // 1953-1-29 UT 7:37
         val flags = 2L or 256L // Use Swiss Eph
-        val location = Location(52.21666667 ,6.9, )
+        val location = Location(52.21666667 ,6.9)
         val nrOfCusps = 12
         val houseSystem = 'p'
         val expected = 314.7241118009

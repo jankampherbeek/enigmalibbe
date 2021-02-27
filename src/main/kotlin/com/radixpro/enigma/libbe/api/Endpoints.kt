@@ -36,17 +36,15 @@ class AstronApi {
 
     /**
      * Calculate the Julian day number for UT.
-     * @param dateTimeParts: the date and time.
      * @return the calculated value for the Julian day number and an error text if an error occurred.
      */
     fun calcJdUt(request: JdUtRequest): SingleDoubleResponse {
         val dateTimeHandler = Injector.injectDateTimeHandler()
-        return dateTimeHandler.calcJdUt(request) as SingleDoubleResponse
+        return dateTimeHandler.calcJdUt(request)
     }
 
     /**
-     * Checks the validty of a date. Takes the calendar (Gregorian or Julina) into account.
-     * @param year: the year (astronomical, so BCE 1 is entered as 0 and BCE 2 is entered as -1 etc.
+     * Checks the validity of a date. Takes the calendar (Gregorian or Julina) into account.
      */
     fun isValidDate(request: ValidDateRequest): Boolean {
         val dateTimeHandler = Injector.injectDateTimeHandler()

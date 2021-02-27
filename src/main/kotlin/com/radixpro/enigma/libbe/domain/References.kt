@@ -36,7 +36,6 @@ enum class CelPointCategory {
     CENTAURS,
     INTERSECTIONS,
     HYPOTHETS
-
 }
 
 /**
