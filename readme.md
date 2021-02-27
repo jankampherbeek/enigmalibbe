@@ -13,6 +13,6 @@ It is still in alpha.
 
 If you want to build the library you will need an additional library and data files.
 
-
+See the release notes for the available functionality.
 
 Jan Kampherbeek, 2021-02-15
