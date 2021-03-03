@@ -8,10 +8,7 @@
 
 package com.radixpro.enigma.libbe.api
 
-import com.radixpro.enigma.libbe.domain.CelPoints
-import com.radixpro.enigma.libbe.domain.DateTimeParts
-import com.radixpro.enigma.libbe.domain.HouseSystems
-import com.radixpro.enigma.libbe.domain.Location
+import com.radixpro.enigma.libbe.domain.*
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldHaveLength
@@ -79,6 +76,27 @@ internal class AstronApiTest {
         api.isValidDate(request) shouldBe false
     }
 
+    @Test
+    fun `IT for calculating a TimeSeries of positions should return the correct results`() {
+        val startJd = 2434404.8173611113
+        val location = Location(52.216666666667, 6.54)
+        val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
+        val observerPos = ObserverPos.GEOCENTRIC
+        val coordinates = Coordinates.ECLIPTICAL
+        val interval = 1.0
+        val repeats = 10
+        val request = TimeSeriesRequest(celPoints, observerPos, coordinates, startJd, location, interval, repeats)
+        val timeSeriesResult = api.calcTimeSeries(request)
+        timeSeriesResult.errors shouldBe false
+        timeSeriesResult.comments shouldHaveLength 0
+        timeSeriesResult.result[0].timePositions.size shouldBe 10
+        // positions for 2 days after start
+        val timeSeries = timeSeriesResult.result
+        timeSeries[0].celPoint shouldBe CelPoints.SUN
+        timeSeries[0].timePositions[2].first shouldBe (2434406.81736111113 plusOrMinus margin)
+        timeSeries[0].timePositions[2].second shouldBe (309.1181602720 plusOrMinus margin)
+
+    }
 
 
 }

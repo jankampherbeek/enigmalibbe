@@ -38,6 +38,9 @@ data class BasePosCelPoint(val celPoint: CelPoints,
                            val eclSpeed: CoordinateSet,
                            val equSpeed: CoordinateSet)
 
+/**
+ * Single cusp for a basechart.
+ */
 data class BaseHousePoint(val eclCoord: CoordinateSet,
                           val equCoord: CoordinateSet)
 
@@ -54,4 +57,28 @@ data class BaseHouseSystem(val asc: BaseHousePoint,
 data class BaseChartPositions(val celPositions: List<BasePosCelPoint>,
                               val houseSystem: BaseHouseSystem
 )
+
+/**
+ * Single position for a simplechart.
+ */
+data class SimplePosCelPoint(val celPoint: CelPoints, val coords: CoordinateSet, val speeds: CoordinateSet)
+
+/**
+ * Positions of houses, asc and mc for a simplechart.
+ */
+data class SimpleHouseSystem(val asc: Double,
+                           val mc: Double,
+                           val cusps: List<Double>)
+
+/**
+ * All calculated positions for a smplechart.
+ */
+data class SimpleChartPositions(val celPositions: List<SimplePosCelPoint>,
+                              val houseSystem: SimpleHouseSystem)
+
+
+/**
+ * Timeseries for a single celestial point. TimePositions contains pairs of <Julian Day, Position>
+ */
+data class TimeSeriesValues(val celPoint: CelPoints, val timePositions: List<Pair<Double, Double>>)
 

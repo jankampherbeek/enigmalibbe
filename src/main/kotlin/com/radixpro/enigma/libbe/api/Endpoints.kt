@@ -9,7 +9,6 @@
 package com.radixpro.enigma.libbe.api
 
 import com.radixpro.enigma.libbe.di.Injector
-import com.radixpro.enigma.libbe.domain.*
 
 /**
  * Endpoints for astronomy related calculations.
@@ -49,6 +48,14 @@ class AstronApi {
     fun isValidDate(request: ValidDateRequest): Boolean {
         val dateTimeHandler = Injector.injectDateTimeHandler()
         return dateTimeHandler.isValidDate(request)
+    }
+
+    /**
+     * Calculates timeseries for positions.
+     */
+    fun calcTimeSeries(request: TimeSeriesRequest): TimeSeriesResponse {
+        val timeSeriesHandler = Injector.injectTimeseriesHandler()
+        return timeSeriesHandler.calcSimpleTimeSeries(request)
     }
 
 }

@@ -114,3 +114,28 @@ class DateTimeHandler(private val julianDayNr: JulianDayNr) {
 }
 
 
+class TimeSeriesHandler(private val celPointCalculator: CelPointCalculator) {
+
+    fun calcSimpleTimeSeries(request: Request): TimeSeriesResponse {
+        val actRequest = request as TimeSeriesRequest
+        var actJd = actRequest.startJd
+        val flags = FlagConstructor.defineFlags(actRequest.observerPos, actRequest.coordinates)
+        var comments = ""
+        val positionsForAllPoints = mutableListOf<TimeSeriesValues>()
+        for (celPoint in actRequest.celPoints) {
+            val positionsForPoint = mutableListOf<Pair<Double, Double>>()
+            for (i in 0 until actRequest.repeats) {
+                val result = celPointCalculator.calcMainPositionsForCelPoint(actJd, celPoint.seId, flags, actRequest.location)
+                comments+= result.second
+                positionsForPoint.add(Pair(actJd, result.first[0]))
+                actJd++
+            }
+            positionsForAllPoints.add(TimeSeriesValues(celPoint, positionsForPoint))
+        }
+        val errors = comments.isNotEmpty()
+        return TimeSeriesResponse(positionsForAllPoints, errors, comments)
+    }
+
+
+}
+

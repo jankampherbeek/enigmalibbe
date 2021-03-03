@@ -15,6 +15,7 @@ import com.radixpro.enigma.libbe.astron.JulianDayNr
 import com.radixpro.enigma.libbe.handlers.BaseChartHandler
 import com.radixpro.enigma.libbe.handlers.DateTimeHandler
 import com.radixpro.enigma.libbe.handlers.EpsilonHandler
+import com.radixpro.enigma.libbe.handlers.TimeSeriesHandler
 import swisseph.SwissEph
 
 /**
@@ -53,6 +54,10 @@ object Injector {
 
     fun injectDateTimeHandler(): DateTimeHandler {
         return DateTimeHandler(injectJulianDayNr())
+    }
+
+    fun injectTimeseriesHandler(): TimeSeriesHandler {
+        return TimeSeriesHandler(injectCelPointCalculator())
     }
 
 }

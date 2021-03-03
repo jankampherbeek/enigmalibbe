@@ -25,6 +25,18 @@ enum class SeFlags(val seValue: Long) {
 
 }
 
+enum class ObserverPos() {
+    GEOCENTRIC,
+    TOPOCENTRIC,
+    HELIOCENTRIC
+}
+
+enum class Coordinates() {
+    ECLIPTICAL,
+    EQUATORIAL,
+    HORIZONTAL
+}
+
 /**
  * Categories for celestial points.
  */
