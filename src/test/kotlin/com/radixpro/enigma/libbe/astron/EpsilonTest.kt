@@ -11,8 +11,6 @@ package com.radixpro.enigma.libbe.astron
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import swisseph.SwissEph
 
 private const val margin = 0.00000001
@@ -28,5 +26,14 @@ internal class EpsilonTest {
         epsilon.calcTrueEpsilon(jdUt).first shouldBe(expected plusOrMinus margin)
         epsilon.calcTrueEpsilon(jdUt).second shouldBe("")
     }
+
+    @Test
+    fun `calculation of obliquity with jdnr out of range should result in an error`() {
+        val swissEph = SwissEph()
+        val epsilon = Epsilon(swissEph)
+        val jdUt = Double.MAX_VALUE
+        epsilon.calcTrueEpsilon(jdUt).first shouldBe Double.NaN
+    }
+
 
 }

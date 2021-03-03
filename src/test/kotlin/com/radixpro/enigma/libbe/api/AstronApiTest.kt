@@ -11,9 +11,11 @@ package com.radixpro.enigma.libbe.api
 import com.radixpro.enigma.libbe.domain.*
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldHaveLength
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.Double.Companion.NaN
 
 /**
  * No mocking or stubbing. These tests are actually integration tests.
@@ -44,6 +46,18 @@ internal class AstronApiTest {
     }
 
     @Test
+    fun `IT for calculating a BaseChart using a JDNR that is out of range should return an error`() {
+        val jdUt = Double.MAX_VALUE
+        val location = Location(52.216666666667, 6.54)
+        val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
+        val request = BaseChartRequest(jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val response = api.calcBaseChart(request)
+        response.comments shouldContain "not found"
+        response.errors shouldBe true
+    }
+
+
+    @Test
     fun `IT for calculating Epsilon should return correct result`() {
         val jdUt = 2434406.817713       // 1953-1-29 UT 7:37
         val expected = 23.4470723027
@@ -54,6 +68,17 @@ internal class AstronApiTest {
     }
 
     @Test
+    fun `IT for calculating Epsilon for a jdnr that is out of range should return an error`() {
+        val jdUt = Double.MAX_VALUE
+        val expected = NaN
+        val response = api.calcEpsilon(EpsilonRequest(jdUt))
+        response.comments shouldContain "out of range"
+        response.errors shouldBe true
+        response.result shouldBe expected
+    }
+
+
+    @Test
     fun `IT for calculating Julian Day Nr should give correct result`() {
         val request = JdUtRequest(DateTimeParts(1953,1,29,7,37,0,0.0, true))
         val expected = 2434406.8173611113
@@ -61,7 +86,16 @@ internal class AstronApiTest {
         response.comments shouldHaveLength 0
         response.errors shouldBe false
         response.result shouldBe (expected plusOrMinus margin)
+    }
 
+    @Test
+    fun `IT for calculating JDNR that is out of range should result in an error`() {
+        val request = JdUtRequest(DateTimeParts(Int.MAX_VALUE,14,100,7,37,0,0.0, true))
+        val expected = NaN
+        val response = api.calcJdUt(request)
+        response.comments shouldContain "Invalid date"
+        response.errors shouldBe true
+        response.result shouldBe expected
     }
 
     @Test

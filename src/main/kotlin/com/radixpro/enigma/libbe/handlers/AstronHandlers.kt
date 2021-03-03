@@ -12,10 +12,13 @@ import com.radixpro.enigma.libbe.api.*
 import com.radixpro.enigma.libbe.astron.*
 import com.radixpro.enigma.libbe.domain.*
 import swisseph.SweConst
+import kotlin.Double.Companion.NaN
 
-class BaseChartHandler(private val celPointCalculator: CelPointCalculator,
-                       private val housesCalculator: HousesCalculator,
-                       private val epsilon: Epsilon) {
+class BaseChartHandler(
+    private val celPointCalculator: CelPointCalculator,
+    private val housesCalculator: HousesCalculator,
+    private val epsilon: Epsilon
+) {
 
     private val eclFlags = 2 or 256 // Use Swiss Eph and speed
     private val equFlags = eclFlags or SweConst.SEFLG_EQUATORIAL
@@ -30,8 +33,10 @@ class BaseChartHandler(private val celPointCalculator: CelPointCalculator,
         for (celPoint in actRequest.celPoints) {
             calculatedCelPoints.add(constructBasePosCelPoint(actRequest.jdUt, celPoint, actRequest.location))
         }
-        val housesCalcResult = housesCalculator.calcPositionsForHouses(actRequest.jdUt, eclFlags, actRequest.location,
-            actRequest.houseSystem.seId.toInt(), actRequest.houseSystem.nrOfCusps)
+        val housesCalcResult = housesCalculator.calcPositionsForHouses(
+            actRequest.jdUt, eclFlags, actRequest.location,
+            actRequest.houseSystem.seId.toInt(), actRequest.houseSystem.nrOfCusps
+        )
         val ascEcl = CoordinateSet(housesCalcResult.first[0], 0.0)
         val mcEcl = CoordinateSet(housesCalcResult.first[1], 0.0)
         val obliquity = epsilon.calcTrueEpsilon(actRequest.jdUt).first
@@ -51,14 +56,14 @@ class BaseChartHandler(private val celPointCalculator: CelPointCalculator,
         val eclPos = CoordinateSet(eclCalcResult.first[0], eclCalcResult.first[1])
         val eclSpeed = CoordinateSet(eclCalcResult.first[3], eclCalcResult.first[4])
         if (eclCalcResult.second.isNotEmpty()) {
-            comments+= eclCalcResult.second
+            comments += eclCalcResult.second
             errors = true
         }
         val equCalcResult = celPointCalculator.calcMainPositionsForCelPoint(jdUt, celPoint.id, equFlags, location)
         val equPos = CoordinateSet(equCalcResult.first[0], equCalcResult.first[1])
         val equSpeed = CoordinateSet(equCalcResult.first[3], equCalcResult.first[4])
         if (equCalcResult.second.isNotEmpty()) {
-            comments+= equCalcResult.second
+            comments += equCalcResult.second
             errors = true
         }
         return BasePosCelPoint(celPoint, eclPos, equPos, eclSpeed, equSpeed)
@@ -82,10 +87,11 @@ class EpsilonHandler(private val epsilon: Epsilon) {
         try {
             val pairedResult = epsilon.calcTrueEpsilon(actRequest.jdUt)
             result = pairedResult.first
-            comments+= pairedResult.second
+            if (result.equals(NaN)) throw Exception("Julian day out of range.")
+            comments += pairedResult.second
         } catch (e: Exception) {
             errors = true
-            comments+= "Error calculating epsilon: " + e.message
+            comments += "Error calculating epsilon: " + e.message
         }
         return SingleDoubleResponse(result, errors, comments)
     }
@@ -94,15 +100,23 @@ class EpsilonHandler(private val epsilon: Epsilon) {
 class DateTimeHandler(private val julianDayNr: JulianDayNr) {
 
     fun calcJdUt(request: Request): SingleDoubleResponse {
-        var calculatedJd = 0.0
+        var calculatedJd: Double
         var comments = ""
         var errors = false
         val actRequest = request as JdUtRequest
         try {
+            if (!isValidDate(
+                    ValidDateRequest(
+                        actRequest.dateTimeParts.year, actRequest.dateTimeParts.month,
+                        actRequest.dateTimeParts.day, actRequest.dateTimeParts.gregorian
+                    )
+                )
+            ) throw Exception("Invalid date")
             calculatedJd = julianDayNr.calculateJdUt(actRequest.dateTimeParts)
         } catch (e: Exception) {
             errors = true
             comments = "Error for jd: " + e.message
+            calculatedJd = NaN
         }
         return SingleDoubleResponse(calculatedJd, errors, comments)
     }
@@ -125,8 +139,9 @@ class TimeSeriesHandler(private val celPointCalculator: CelPointCalculator) {
         for (celPoint in actRequest.celPoints) {
             val positionsForPoint = mutableListOf<Pair<Double, Double>>()
             for (i in 0 until actRequest.repeats) {
-                val result = celPointCalculator.calcMainPositionsForCelPoint(actJd, celPoint.seId, flags, actRequest.location)
-                comments+= result.second
+                val result =
+                    celPointCalculator.calcMainPositionsForCelPoint(actJd, celPoint.seId, flags, actRequest.location)
+                comments += result.second
                 positionsForPoint.add(Pair(actJd, result.first[0]))
                 actJd++
             }

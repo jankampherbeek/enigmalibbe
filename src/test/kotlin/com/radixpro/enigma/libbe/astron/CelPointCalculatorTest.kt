@@ -8,6 +8,7 @@
 
 package com.radixpro.enigma.libbe.astron
 
+import com.radixpro.enigma.libbe.domain.CelPoints
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -31,7 +32,7 @@ internal class CelPointCalculatorTest {
     fun `Calculating the longitudional positions and speeds for the Sun should give the correct results`() {
         val jdUt = 2434406.817713       // 1953-1-29 UT 7:37
         val flags = 2L or 256L // Use Swiss Eph and speed
-        val id = 0
+        val id = CelPoints.SUN.seId
         val expectedLon = 309.11851554
         val expectedLat = 0.00003117191
         val expectedRadv = 0.9850163594
@@ -45,6 +46,17 @@ internal class CelPointCalculatorTest {
         results.first[3] shouldBe (expectedLonSpeed plusOrMinus margin)
         results.first[4] shouldBe (expectedLatSpeed plusOrMinus margin)
         results.first[5] shouldBe (expectedRadvSpeed plusOrMinus margin)
+        results.second shouldContain "Moshier"
+    }
+
+    @Test
+    fun `Calculating the longitudional positions for the Moon, using parallax, should give the correct results`() {
+        val jdUt = 2434406.817713       // 1953-1-29 UT 7:37
+        val flags = 2L or 256L or 32*1024L // Use Swiss Eph, speed and parallax
+        val id = CelPoints.MOON.seId
+        val expectedLon = 121.0261819998
+        val results = calculator.calcMainPositionsForCelPoint(jdUt, id, flags.toInt())
+        results.first[0] shouldBe (expectedLon plusOrMinus margin)
         results.second shouldContain "Moshier"
     }
 }
