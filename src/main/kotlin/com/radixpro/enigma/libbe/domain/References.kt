@@ -37,6 +37,28 @@ enum class Coordinates() {
     HORIZONTAL
 }
 
+enum class Ratings{
+    UNKNOWN,
+    AA,
+    A,
+    B,
+    C,
+    DD,
+    X,
+    XX
+}
+
+enum class ChartTypes {
+    UNKNOWN,
+    FEMALE,
+    MALE,
+    NATAL,
+    EVENT,
+    HORARY,
+    ELECTION
+}
+
+
 /**
  * Categories for celestial points.
  */
@@ -125,4 +147,77 @@ enum class CelPoints(
         SUNSHINE(21, 'i', 12, true, false, false),
         SUNSHINE_TREINDL(22, 'I', 12, true, false, true)
     }
+
+
+    enum class Ayanamshas(val seId: Int){
+        NONE(-1),
+        FAGAN(0),
+        LAHIRI(1),
+        DELUCE(2),
+        RAMAN(3),
+        USHA_SHASHI(4),
+        KRISHNAMURTI(5),
+        DJWHAL_KHUL(6),
+        YUKTESHWAR(7),
+        BHASIN(8),
+        KUGLER_1(9),
+        KUGLER_2(10),
+        KUGLER_3(11),
+        HUBER(12),
+        ETA_PISCIUM(13),
+        ALDEBARAN_15TAU(14),
+        HIPPARCHUS(15),
+        SASSANIAN(16),
+        GALACT_CTR_0SAG(17),
+        J2000(18),
+        J1900(19),
+        B1950(20),
+        SURYASIDDHANTA(21),
+        SURYASIDDHANTA_MEAN_SUN(22),
+        ARYABHATA(23),
+        ARYABHATA_MEAN_SUN(24),
+        SS_REVATI(25),
+        SS_CITRA(26),
+        TRUE_CITRA(27),
+        TRUE_REVATI(28),
+        TRUE_PUSHYA(29),
+        GALACTIC_CTR_BRAND(30),
+        GALACTIC_EQ_IAU1958(31),
+        GALACTIC_EQ(32),
+        GALACTIC_EQ_MID_MULA(33),
+        SKYDRAM(34),
+        TRUE_MULA(35),
+        DHRUVA(36),
+        ARYABHATA_522(37),
+        BRITTON(38),
+        GALACTIC_CTR_0CAP(39)
+    }
+
+    enum class Aspects(angle: Double) {
+        CONJUNCTION(0.0),
+        OPPOSITION(180.0),
+        TRIANGLE(120.0),
+        SQUARE(90.0),
+        SEXTILE(60.0),
+        SEMISEXTILE(30.0),
+        INCONJUNCT(150.0),
+        SEMISQUARE(45.0),
+        SESQUIQUADRATE(135.0),
+        QUINTILE(72.0),
+        BIQUINTILE(144.0),
+        SEPTILE(51.42857143),
+        VIGINTILE(18.0),
+        SEMIQUINTILE(36.0),
+        TRIDECILE(108.0),
+        BISEPTILE(102.857142857),
+        TRISEPTILE(154.2857142857),
+        NOVILE(40.0),
+        BINOVILE(80.0),
+        QUADRANOVILE(160.0),
+        UNDECILE( 32.7272727272),
+        CENTILE(100.0)
+
+    }
+
+
 

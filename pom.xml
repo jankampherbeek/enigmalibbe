@@ -79,7 +79,6 @@
 
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>de.th-mack</groupId>
