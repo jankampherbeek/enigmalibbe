@@ -26,12 +26,13 @@
         </pluginRepository>
     </pluginRepositories>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dokka.version>1.4.20</dokka.version>
+        <junit.version>4.12</junit.version>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.version>1.4.30</kotlin.version>
         <mack.version>2.01.00-02</mack.version>
-        <junit.version>4.12</junit.version>
-        <dokka.version>1.4.20</dokka.version>
+        <opencsv.version>5.3</opencsv.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
@@ -80,6 +81,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv.version}</version>
+        </dependency>
         <dependency>
             <groupId>de.th-mack</groupId>
             <artifactId>seport</artifactId>
