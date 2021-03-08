@@ -6,11 +6,12 @@
  *
  */
 
-package com.radixpro.enigma.libbe.domain
+package com.radixpro.enigma.libbe.persistency
 
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsv
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import com.radixpro.enigma.libbe.domain.PersistedChart
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -40,7 +41,7 @@ class ChartDao{
 
     /**
      * Returns all charts that have a specific id.
-     * The result is a list but should contain nor more than one chart as id is unique.
+     * The result is a list but should contain not more than one chart as id is unique.
      * If no chart is found the list will be empty.
      */
     fun readForId(fileAndPath: String, id: Int): List<PersistedChart> {
@@ -83,7 +84,7 @@ class ChartDao{
     fun update(fileAndPath: String, chart2Update: PersistedChart) {
         val id = chart2Update.id
         val allCharts = readAll(fileAndPath)
-        var newCharts: MutableList<PersistedChart> = mutableListOf()
+        val newCharts: MutableList<PersistedChart> = mutableListOf()
         for (chart: PersistedChart in allCharts) {
             if (chart.id != id) newCharts.add(chart)
         }
@@ -105,7 +106,7 @@ class ChartDao{
     }
 
     /**
-     * Calculates the next avaiable id, comparable to a sequence in a RDBMS.
+     * Calculates the next available id, comparable to a sequence in a RDBMS.
      */
     private fun findNextId(allCharts: List<PersistedChart>): Int {
         var nextId = 1

@@ -26,7 +26,7 @@ data class PersistedChart(
 )
 
 data class PersistedEvent(
-    val id: Int = 0,
+    var id: Int = 0,
     val chartId: Int = 0,
     val description: String = "",
     val jdUt: Double = 0.0,
@@ -36,7 +36,7 @@ data class PersistedEvent(
 )
 
 data class PersistedConfig(
-    val id: Int = 0,
+    var id: Int = 0,
     val name: String = "",
     val description: String = "",
     val ayanamsha: Ayanamshas = Ayanamshas.NONE,

@@ -6,8 +6,11 @@
  *
  */
 
-package com.radixpro.enigma.libbe.domain
+package com.radixpro.enigma.libbe.persistency
 
+import com.radixpro.enigma.libbe.domain.ChartTypes
+import com.radixpro.enigma.libbe.domain.PersistedChart
+import com.radixpro.enigma.libbe.domain.Ratings
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -100,38 +103,5 @@ internal class ChartDaoTest {
         val allCharts = listOf(persChart1, persChart2, persChart3)
         dao.writeAll(fileAndPath, allCharts)
     }
-
-
-//    @Test
-//    fun addChart() {
-//        val id = 2
-//        val name = "Jan"
-//        val description = "Test"
-//        val rating = Ratings.AA
-//        val chartType = ChartTypes.MALE
-//        val jdUt = 1234.5678
-//        val geoLat = 52.0
-//        val geoLon = 6.9
-//        val input = "dit wordt een lange tekst met veel gegevens"
-//        println(GregorianCalendar().timeInMillis)
-//        val allCharts = mutableListOf<PersistedChart>()
-//        for (i in 1 .. 100000) {
-//            allCharts.add(PersistedChart(i, name, description, rating, chartType, jdUt, geoLat, geoLon, input))
-//        }
-//        println(GregorianCalendar().timeInMillis)
-//        val dao = ChartDao()
-//        dao.writeAll(fileAndPath, allCharts)
-//        println(GregorianCalendar().timeInMillis)
-//    }
-//
-//    @Test
-//    fun readAllCharts() {
-//        println("Reading.........")
-//        println(GregorianCalendar().timeInMillis)
-//        val dao = ChartDao()
-//        val allCharts = dao.readAll(fileAndPath)
-//        println(GregorianCalendar().timeInMillis)
-//        allCharts.size shouldBe 100000
-//    }
 
 }
