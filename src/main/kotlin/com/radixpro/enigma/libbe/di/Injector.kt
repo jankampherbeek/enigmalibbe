@@ -16,6 +16,7 @@ import com.radixpro.enigma.libbe.handlers.BaseChartHandler
 import com.radixpro.enigma.libbe.handlers.DateTimeHandler
 import com.radixpro.enigma.libbe.handlers.EpsilonHandler
 import com.radixpro.enigma.libbe.handlers.TimeSeriesHandler
+import com.radixpro.enigma.libbe.persistency.*
 import swisseph.SwissEph
 
 /**
@@ -23,37 +24,61 @@ import swisseph.SwissEph
  */
 object Injector {
 
-    private fun injectSwissEph(): SwissEph {
-        val path = "./se"
-        return SwissEph(path)
-    }
-
-    private fun injectEpsilon(): Epsilon {
-        return Epsilon(injectSwissEph())
-    }
-
-    private fun injectJulianDayNr(): JulianDayNr{
-        return JulianDayNr()
-    }
-
-    private fun injectCelPointCalculator(): CelPointCalculator {
-        return CelPointCalculator(injectSwissEph())
-    }
-
-    private fun injectHousesCalculator(): HousesCalculator {
-        return HousesCalculator(injectSwissEph())
+    fun injectAspectsTextMapper(): AspectsTextMapper {
+        return AspectsTextMapper()
     }
 
     fun injectBaseChartHandler(): BaseChartHandler {
         return BaseChartHandler(injectCelPointCalculator(), injectHousesCalculator(), injectEpsilon())
     }
 
-    fun injectEpsilonHandler(): EpsilonHandler {
-        return EpsilonHandler(injectEpsilon())
+    private fun injectCelPointCalculator(): CelPointCalculator {
+        return CelPointCalculator(injectSwissEph())
+    }
+
+    fun injectCelPointsTextMapper(): CelPointsTextMapper {
+        return CelPointsTextMapper()
+    }
+
+    fun injectChartDao(): ChartDao {
+        return ChartDao()
+    }
+
+    fun injectConfigDao(): ConfigDao {
+        return ConfigDao(injectConfigMapper())
+    }
+
+    private fun injectConfigMapper(): ConfigMapper {
+        return ConfigMapper(injectCelPointsTextMapper(), injectAspectsTextMapper())
     }
 
     fun injectDateTimeHandler(): DateTimeHandler {
         return DateTimeHandler(injectJulianDayNr())
+    }
+
+    private fun injectEpsilon(): Epsilon {
+        return Epsilon(injectSwissEph())
+    }
+
+    fun injectEpsilonHandler(): EpsilonHandler {
+        return EpsilonHandler(injectEpsilon())
+    }
+
+    fun injectEventDao(): EventDao {
+        return EventDao()
+    }
+
+    private fun injectHousesCalculator(): HousesCalculator {
+        return HousesCalculator(injectSwissEph())
+    }
+
+    private fun injectJulianDayNr(): JulianDayNr{
+        return JulianDayNr()
+    }
+
+    private fun injectSwissEph(): SwissEph {
+        val path = "./se"
+        return SwissEph(path)
     }
 
     fun injectTimeseriesHandler(): TimeSeriesHandler {

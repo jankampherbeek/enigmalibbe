@@ -8,12 +8,14 @@
 
 package com.radixpro.enigma.libbe.domain
 
+import com.opencsv.bean.CsvBindByName
+
 /**
  * Members in data classes for persistency need default values.
  * This forces Kotlin to add an empty constructor which is required by OpenCSV.
  */
 
-data class PersistedChart(
+data class ChartData(
     var id: Int = 0,
     val name: String = "",
     val description: String  = "",
@@ -25,7 +27,7 @@ data class PersistedChart(
     val input: String = ""
 )
 
-data class PersistedEvent(
+data class ChartEvent(
     var id: Int = 0,
     val chartId: Int = 0,
     val description: String = "",
@@ -36,14 +38,26 @@ data class PersistedEvent(
 )
 
 data class PersistedConfig(
-    var id: Int = 0,
-    val name: String = "",
-    val description: String = "",
-    val ayanamsha: Ayanamshas = Ayanamshas.NONE,
-    val houseSystem: HouseSystems = HouseSystems.NO_HOUSES,
-    val observerPos: ObserverPos = ObserverPos.GEOCENTRIC,
-    val celPoints: List<PersistedCelPoint> = mutableListOf(),
-    val aspects: List<PersistedAspect> = mutableListOf()
+    @CsvBindByName var id: Int = 0,
+    @CsvBindByName val name: String = "",
+    @CsvBindByName val description: String = "",
+    @CsvBindByName val ayanamsha: Ayanamshas = Ayanamshas.NONE,
+    @CsvBindByName val houseSystem: HouseSystems = HouseSystems.NO_HOUSES,
+    @CsvBindByName val observerPos: ObserverPos = ObserverPos.GEOCENTRIC,
+    @CsvBindByName val celPointsText: String = "",
+    @CsvBindByName val aspectsText: String = ""
+
+)
+
+data class Config(
+    var id: Int,
+    val name: String,
+    val description: String,
+    val ayanamsha: Ayanamshas,
+    val houseSystem: HouseSystems,
+    val observerPos: ObserverPos,
+    val celPoints: List<PersistedCelPoint>,
+    val aspects: List<PersistedAspect>
 )
 
 data class PersistedCelPoint(
@@ -55,7 +69,5 @@ data class PersistedCelPoint(
 data class PersistedAspect(
     val aspect: Aspects,
     val showInDrawing: Boolean,
-    val showInOut: Boolean,
-    val glyph: String,
-    val secondGlyph: String
+    val glyph: String
 )

@@ -11,7 +11,7 @@ package com.radixpro.enigma.libbe.persistency
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsv
 import com.opencsv.bean.StatefulBeanToCsvBuilder
-import com.radixpro.enigma.libbe.domain.PersistedChart
+import com.radixpro.enigma.libbe.domain.ChartData
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -24,19 +24,19 @@ class ChartDao{
     /**
      * Writes all charts to a file and overwrites any previous data.
      */
-    fun writeAll(fileAndPath: String, charts: List<PersistedChart>) {
+    fun writeAll(fileAndPath: String, chartData: List<ChartData>) {
         val writer: Writer = FileWriter(fileAndPath)
-        val beanToCsv: StatefulBeanToCsv<PersistedChart> = StatefulBeanToCsvBuilder<PersistedChart>(writer).build()
-        beanToCsv.write(charts)
+        val beanToCsv: StatefulBeanToCsv<ChartData> = StatefulBeanToCsvBuilder<ChartData>(writer).build()
+        beanToCsv.write(chartData)
         writer.close()
     }
 
     /**
      * Reads all charts from a file.
      */
-    fun readAll(fileAndPath: String): MutableList<PersistedChart> {
-        return CsvToBeanBuilder<PersistedChart>(FileReader(fileAndPath))
-            .withType(PersistedChart::class.java).build().parse()
+    fun readAll(fileAndPath: String): MutableList<ChartData> {
+        return CsvToBeanBuilder<ChartData>(FileReader(fileAndPath))
+            .withType(ChartData::class.java).build().parse()
     }
 
     /**
@@ -44,11 +44,11 @@ class ChartDao{
      * The result is a list but should contain not more than one chart as id is unique.
      * If no chart is found the list will be empty.
      */
-    fun readForId(fileAndPath: String, id: Int): List<PersistedChart> {
+    fun readForId(fileAndPath: String, id: Int): List<ChartData> {
         val allCharts = readAll(fileAndPath)
-        val searchResult = mutableListOf<PersistedChart>()
-        for (chart: PersistedChart in allCharts) {
-            if (chart.id == id) searchResult.add(chart)
+        val searchResult = mutableListOf<ChartData>()
+        for (chartData: ChartData in allCharts) {
+            if (chartData.id == id) searchResult.add(chartData)
         }
         return searchResult
     }
@@ -58,11 +58,11 @@ class ChartDao{
      * The searchstring can be at the start, the end or in between.
      * If no chart is found the result is an empty list.
      */
-    fun searchForName(fileAndPath: String, name: String): List<PersistedChart> {
+    fun searchForName(fileAndPath: String, name: String): List<ChartData> {
         val allCharts = readAll(fileAndPath)
-        val searchResult = mutableListOf<PersistedChart>()
-        for (chart: PersistedChart in allCharts) {
-            if (chart.name.toLowerCase().contains(name.toLowerCase())) searchResult.add(chart)
+        val searchResult = mutableListOf<ChartData>()
+        for (chartData: ChartData in allCharts) {
+            if (chartData.name.toLowerCase().contains(name.toLowerCase())) searchResult.add(chartData)
         }
         return searchResult
     }
@@ -70,48 +70,48 @@ class ChartDao{
     /**
      * Adds a chart to a given file without deleting previous data.
      */
-    fun add(fileAndPath: String, chart: PersistedChart) {
+    fun add(fileAndPath: String, chartData: ChartData) {
         val allCharts = readAll(fileAndPath)
         val nextId = findNextId(allCharts)
-        chart.id = nextId
-        allCharts.add(chart)
+        chartData.id = nextId
+        allCharts.add(chartData)
         writeAll(fileAndPath, allCharts)
     }
 
     /**
      * Updates a specific chart that has the same id as chart2Update.
      */
-    fun update(fileAndPath: String, chart2Update: PersistedChart) {
-        val id = chart2Update.id
+    fun update(fileAndPath: String, chartData2Update: ChartData) {
+        val id = chartData2Update.id
         val allCharts = readAll(fileAndPath)
-        val newCharts: MutableList<PersistedChart> = mutableListOf()
-        for (chart: PersistedChart in allCharts) {
-            if (chart.id != id) newCharts.add(chart)
+        val newChartData: MutableList<ChartData> = mutableListOf()
+        for (chartData: ChartData in allCharts) {
+            if (chartData.id != id) newChartData.add(chartData)
         }
-        newCharts.add(chart2Update)
-        writeAll(fileAndPath, newCharts)
+        newChartData.add(chartData2Update)
+        writeAll(fileAndPath, newChartData)
     }
 
     /**
      * Deletes a chart that has the same id as chart2Delete.
      */
-    fun delete(fileAndPath: String, chart2Delete: PersistedChart) {
-        val id = chart2Delete.id
+    fun delete(fileAndPath: String, chartData2Delete: ChartData) {
+        val id = chartData2Delete.id
         val allCharts = readAll(fileAndPath)
-        var newCharts: MutableList<PersistedChart> = mutableListOf()
-        for (chart: PersistedChart in allCharts) {
-            if (chart.id != id) newCharts.add(chart)
+        var newChartData: MutableList<ChartData> = mutableListOf()
+        for (chartData: ChartData in allCharts) {
+            if (chartData.id != id) newChartData.add(chartData)
         }
-        writeAll(fileAndPath, newCharts)
+        writeAll(fileAndPath, newChartData)
     }
 
     /**
      * Calculates the next available id, comparable to a sequence in a RDBMS.
      */
-    private fun findNextId(allCharts: List<PersistedChart>): Int {
+    private fun findNextId(allChartData: List<ChartData>): Int {
         var nextId = 1
-        for (chart: PersistedChart in allCharts) {
-            if (chart.id >= nextId) nextId = chart.id+1
+        for (chartData: ChartData in allChartData) {
+            if (chartData.id >= nextId) nextId = chartData.id+1
         }
         return nextId
     }

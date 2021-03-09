@@ -8,7 +8,7 @@
 
 package com.radixpro.enigma.libbe.persistency
 
-import com.radixpro.enigma.libbe.domain.PersistedEvent
+import com.radixpro.enigma.libbe.domain.ChartEvent
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -16,15 +16,15 @@ import java.io.File
 internal class EventDaoTest {
 
     private val fileAndPath = "." + File.separator + "testdata" + File.separator + " testEvents.csv"
-    private val persEvent1 = PersistedEvent(1, 1, "descr1", 2444406.5, 10.0,
+    private val persEvent1 = ChartEvent(1, 1, "descr1", 2444406.5, 10.0,
         20.0, "Source: xxx, Location: yyy, Coordinates: 10.00.00 N/20.00.00 E, Date: ..... G, Time: 12:00:00 UT")
-    private val persEvent2 = PersistedEvent(2, 1, "descr2", 2444506.5, 14.0,
+    private val persEvent2 = ChartEvent(2, 1, "descr2", 2444506.5, 14.0,
         -24.0, "Source: aaa, Location: bbb, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT")
-    private val persEvent3 = PersistedEvent(3, 11, "descr3", 2444606.5, 14.0,
+    private val persEvent3 = ChartEvent(3, 11, "descr3", 2444606.5, 14.0,
         -24.0, "Source: ccc, Location: ddd, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT")
-    private val persEventNew = PersistedEvent(4, 11, "descr-new", 2444606.5, 14.0,
+    private val persEventNew = ChartEvent(4, 11, "descr-new", 2444606.5, 14.0,
         -24.0, "Source: ccc, Location: ddd, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT")
-    private val persEventUpdate = PersistedEvent(2, 11, "descr-updated", 2444606.5, 14.0,
+    private val persEventUpdate = ChartEvent(2, 11, "descr-updated", 2444606.5, 14.0,
         -24.0, "Source: ccc, Location: ddd, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT")
 
     private val dao = EventDao()
@@ -34,7 +34,7 @@ internal class EventDaoTest {
         initializeCsvFile()
         val results = dao.readAll(fileAndPath)
         results.size shouldBe 3
-        for (event: PersistedEvent in results) {
+        for (event: ChartEvent in results) {
             if (event.id == 2) event.description shouldBe "descr2"
         }
     }
@@ -87,5 +87,9 @@ internal class EventDaoTest {
         val allEvents = listOf(persEvent1, persEvent2, persEvent3)
         dao.writeAll(fileAndPath, allEvents)
     }
+
+
+
+
 
 }

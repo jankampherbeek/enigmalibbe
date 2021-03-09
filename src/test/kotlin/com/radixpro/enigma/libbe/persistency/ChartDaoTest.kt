@@ -9,7 +9,7 @@
 package com.radixpro.enigma.libbe.persistency
 
 import com.radixpro.enigma.libbe.domain.ChartTypes
-import com.radixpro.enigma.libbe.domain.PersistedChart
+import com.radixpro.enigma.libbe.domain.ChartData
 import com.radixpro.enigma.libbe.domain.Ratings
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -18,19 +18,19 @@ import java.io.File
 internal class ChartDaoTest {
 
     private val fileAndPath = "." + File.separator + "testdata" + File.separator + " testCharts.csv"
-    private val persChart1 = PersistedChart(1, "Name1", "Descr1", Ratings.AA, ChartTypes.MALE,
+    private val persChart1 = ChartData(1, "Name1", "Descr1", Ratings.AA, ChartTypes.MALE,
         2434406.8125, 52.0, 5.5,
         "Source: someone told me, Location: Amsterdam, Coordinates: 52.00.00 N/5.30.00 E, Date: 1953/01/29 G, Time: 8:37:30 CET")
-    private val persChart2 = PersistedChart(2, "Name2", "Descr2", Ratings.X, ChartTypes.FEMALE,
+    private val persChart2 = ChartData(2, "Name2", "Descr2", Ratings.X, ChartTypes.FEMALE,
         2434416.0, 50.0, -5.5,
         "Source: anything, Location: Somewhere, Coordinates: 50.00.00 N/5.00.00 W, Date: 1953/02/07 G, Time: 12:00:00 UT")
-    private val persChart3 = PersistedChart(3, "Name3", "Descr3", Ratings.B, ChartTypes.HORARY,
+    private val persChart3 = ChartData(3, "Name3", "Descr3", Ratings.B, ChartTypes.HORARY,
         2434516.0, -60.0, -55.5,
         "Source: my info, Location: my place, Coordinates: 60.00.00 S/55.30.00 W, Date: ..... G, Time: .....")
-    private val persChartNew = PersistedChart(0, "Name-new", "Descr-new", Ratings.C, ChartTypes.EVENT,
+    private val persChartNew = ChartData(0, "Name-new", "Descr-new", Ratings.C, ChartTypes.EVENT,
         2434616.0, -60.0, -55.5,
         "Source: my info, Location: my place, Coordinates: 60.00.00 S/55.30.00 W, Date: ..... G, Time: .....")
-    private val persChartUpdate = PersistedChart(2, "Name-updated", "Descr-updated", Ratings.C, ChartTypes.EVENT,
+    private val persChartUpdate = ChartData(2, "Name-updated", "Descr-updated", Ratings.C, ChartTypes.EVENT,
         2434616.0, -60.0, -55.5,
         "Source: my info, Location: my place, Coordinates: 60.00.00 S/55.30.00 W, Date: ..... G, Time: .....")
     private val dao = ChartDao()
@@ -40,8 +40,8 @@ internal class ChartDaoTest {
         initializeCsvFile()
         val results = dao.readAll(fileAndPath)
         results.size shouldBe 3
-        for (chart: PersistedChart in results) {
-            if (chart.id == 2) chart.description shouldBe "Descr2"
+        for (chartData: ChartData in results) {
+            if (chartData.id == 2) chartData.description shouldBe "Descr2"
         }
     }
 
