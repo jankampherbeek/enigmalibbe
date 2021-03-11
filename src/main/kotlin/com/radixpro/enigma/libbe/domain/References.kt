@@ -220,4 +220,18 @@ enum class CelPoints(
     }
 
 
+    enum class WriteActions {
+        WRITEALL,
+        ADD,
+        UPDATE,
+        DELETE
+    }
+
+    enum class ReadActions {
+        READALL,
+        READFORID,
+        READFORCHARTID,
+        SEARCHFORNAME
+    }
+
 

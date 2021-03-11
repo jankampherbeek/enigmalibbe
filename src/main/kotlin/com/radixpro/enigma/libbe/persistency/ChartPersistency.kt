@@ -12,6 +12,7 @@ import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsv
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import com.radixpro.enigma.libbe.domain.ChartData
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -35,8 +36,9 @@ class ChartDao{
      * Reads all charts from a file.
      */
     fun readAll(fileAndPath: String): MutableList<ChartData> {
-        return CsvToBeanBuilder<ChartData>(FileReader(fileAndPath))
+        return if (File(fileAndPath).exists()) CsvToBeanBuilder<ChartData>(FileReader(fileAndPath))
             .withType(ChartData::class.java).build().parse()
+        else mutableListOf()
     }
 
     /**
@@ -98,7 +100,7 @@ class ChartDao{
     fun delete(fileAndPath: String, chartData2Delete: ChartData) {
         val id = chartData2Delete.id
         val allCharts = readAll(fileAndPath)
-        var newChartData: MutableList<ChartData> = mutableListOf()
+        val newChartData: MutableList<ChartData> = mutableListOf()
         for (chartData: ChartData in allCharts) {
             if (chartData.id != id) newChartData.add(chartData)
         }

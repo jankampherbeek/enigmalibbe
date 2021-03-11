@@ -25,3 +25,16 @@ data class BaseChartRequest(val jdUt: Double, val celPoints: List<CelPoints>, va
 data class TimeSeriesRequest(val celPoints: List<CelPoints>, val observerPos: ObserverPos, val coordinates: Coordinates,
                              val startJd: Double, val location: Location = Location(0.0, 0.0),
                              val interval: Double = 1.0, val repeats: Int = 100): Request
+
+data class ChartWriteRequest(val action: WriteActions, val fileAndPath: String, val charts: List<ChartData>): Request
+
+data class ChartReadRequest(val action: ReadActions, val fileAndPath: String, val searchId: Int = 0,
+                            val searchPartOfName: String = ""): Request
+
+data class EventWriteRequest(val action: WriteActions, val fileAndPath: String, val events: List<ChartEvent>): Request
+
+data class EventReadRequest(val action: ReadActions, val fileAndPath: String, val searchId: Int = 0): Request
+
+data class ConfigWriteRequest(val action: WriteActions, val fileAndPath: String, val configs: List<Config>): Request
+
+data class ConfigReadRequest(val action: ReadActions, val fileAndPath: String, val searchId: Int = 0): Request

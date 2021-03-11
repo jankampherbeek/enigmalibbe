@@ -12,10 +12,7 @@ import com.radixpro.enigma.libbe.astron.CelPointCalculator
 import com.radixpro.enigma.libbe.astron.Epsilon
 import com.radixpro.enigma.libbe.astron.HousesCalculator
 import com.radixpro.enigma.libbe.astron.JulianDayNr
-import com.radixpro.enigma.libbe.handlers.BaseChartHandler
-import com.radixpro.enigma.libbe.handlers.DateTimeHandler
-import com.radixpro.enigma.libbe.handlers.EpsilonHandler
-import com.radixpro.enigma.libbe.handlers.TimeSeriesHandler
+import com.radixpro.enigma.libbe.handlers.*
 import com.radixpro.enigma.libbe.persistency.*
 import swisseph.SwissEph
 
@@ -44,12 +41,20 @@ object Injector {
         return ChartDao()
     }
 
+    fun injectChartPersistencyHandler(): ChartPersistencyHandler {
+        return ChartPersistencyHandler(injectChartDao())
+    }
+
     fun injectConfigDao(): ConfigDao {
         return ConfigDao(injectConfigMapper())
     }
 
     private fun injectConfigMapper(): ConfigMapper {
         return ConfigMapper(injectCelPointsTextMapper(), injectAspectsTextMapper())
+    }
+
+    fun injectConfigPersistencyHandler(): ConfigPersistencyHandler {
+        return ConfigPersistencyHandler(injectConfigDao())
     }
 
     fun injectDateTimeHandler(): DateTimeHandler {
@@ -66,6 +71,10 @@ object Injector {
 
     fun injectEventDao(): EventDao {
         return EventDao()
+    }
+
+    fun injectEventPersistencyHandler(): EventPersistencyHandler {
+        return EventPersistencyHandler(injectEventDao())
     }
 
     private fun injectHousesCalculator(): HousesCalculator {

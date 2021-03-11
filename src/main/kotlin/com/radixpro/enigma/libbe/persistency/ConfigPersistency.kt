@@ -12,6 +12,7 @@ import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsv
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import com.radixpro.enigma.libbe.domain.*
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -32,10 +33,13 @@ class ConfigDao(private val configMapper: ConfigMapper) {
     /**
      * Reads all configs from a file.
      */
-    fun readAll(fileAndPath: String): List<Config> {
-        val persConfigs = CsvToBeanBuilder<PersistedConfig>(FileReader(fileAndPath))
-            .withType(PersistedConfig::class.java).build().parse()
-        return configMapper.persistedConfig2Config(persConfigs)
+    fun readAll(fileAndPath: String): MutableList<Config> {
+        return if (File(fileAndPath).exists()) {
+            val persConfigs = CsvToBeanBuilder<PersistedConfig>(FileReader(fileAndPath))
+                .withType(PersistedConfig::class.java).build().parse()
+            configMapper.persistedConfig2Config(persConfigs)
+        } else mutableListOf()
+
     }
 
     /**
@@ -69,7 +73,7 @@ class ConfigDao(private val configMapper: ConfigMapper) {
     fun update(fileAndPath: String, config2Update: Config) {
         val id = config2Update.id
         val allConfigs = readAll(fileAndPath)
-        var newConfig: MutableList<Config> = mutableListOf()
+        val newConfig: MutableList<Config> = mutableListOf()
         for (config: Config in allConfigs) {
             if (config.id != id) newConfig.add(config)
         }
@@ -95,7 +99,7 @@ class ConfigDao(private val configMapper: ConfigMapper) {
     fun delete(fileAndPath: String, config2Delete: Config) {
         val id = config2Delete.id
         val allConfigs = readAll(fileAndPath)
-        var newConfigs: MutableList<Config> = mutableListOf()
+        val newConfigs: MutableList<Config> = mutableListOf()
         for (config: Config in allConfigs) {
             if (config.id != id) newConfigs.add(config)
         }
@@ -106,7 +110,7 @@ class ConfigDao(private val configMapper: ConfigMapper) {
 
 class ConfigMapper(private val celPointsTextMapper: CelPointsTextMapper, private val aspectsTextMapper: AspectsTextMapper) {
 
-    fun persistedConfig2Config(persConfigs: List<PersistedConfig>): List<Config> {
+    fun persistedConfig2Config(persConfigs: List<PersistedConfig>): MutableList<Config> {
         val configs = mutableListOf<Config>()
         for (persConfig in persConfigs) {
             configs.add(persistedConfig2Config(persConfig))
@@ -122,14 +126,14 @@ class ConfigMapper(private val celPointsTextMapper: CelPointsTextMapper, private
         return persConfigs
     }
 
-    fun persistedConfig2Config(persConfig: PersistedConfig): Config {
+    private fun persistedConfig2Config(persConfig: PersistedConfig): Config {
         val celPoints = celPointsTextMapper.createCelPoints(persConfig.celPointsText)
         val aspects = aspectsTextMapper.createAspects(persConfig.aspectsText)
         return Config(persConfig.id, persConfig.name, persConfig.description, persConfig.ayanamsha,
             persConfig.houseSystem, persConfig.observerPos, celPoints, aspects)
     }
 
-    fun config2PersistedConfig(config: Config): PersistedConfig {
+    private fun config2PersistedConfig(config: Config): PersistedConfig {
         val pointsText = celPointsTextMapper.createText(config.celPoints)
         val aspectsText = aspectsTextMapper.createText(config.aspects)
         return PersistedConfig(config.id, config.name, config.description, config.ayanamsha, config.houseSystem,

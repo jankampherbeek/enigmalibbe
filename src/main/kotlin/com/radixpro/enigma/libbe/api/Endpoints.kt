@@ -59,3 +59,88 @@ class AstronApi {
     }
 
 }
+
+/**
+ * Endpoint for persistency of Chart data.
+ */
+class ChartPersistencyApi {
+
+    /**
+     * Reads ChartData, the request defines how the data is retrieved.
+     * @return a response that gives the reslt of the reading, a boolean indicating any errors and a text with possible errors.
+     */
+    fun read(request: ChartReadRequest): ChartReadResponse {
+        val handler = Injector.injectChartPersistencyHandler()
+        return handler.read(request)
+    }
+
+    /**
+     * Changes data, the request defines how the data is changed.
+     * Updating a chart that does not exist results in adding the chart.
+     * Deleting a chart that does not exist results in no action and no errors.
+     * @return a response that indicates the number of changes, a boolean indicating any errors and a text with possible errors.
+     */
+    fun write(request: ChartWriteRequest): WriteResponse {
+        val handler = Injector.injectChartPersistencyHandler()
+        return handler.write(request)
+    }
+}
+
+
+/**
+ * Endpoint for persistency of Events.
+ */
+class EventPersistencyApi {
+
+    /**
+     * Reads Events, the request defines how the data is retrieved.
+     * @return a response that gives the result of the reading, a boolean indicating any errors and a text with possible errors.
+     */
+    fun read(request: EventReadRequest): EventReadResponse {
+        val handler = Injector.injectEventPersistencyHandler()
+        return handler.read(request)
+    }
+
+    /**
+     * Changes data for events, the request defines how the data is changed.
+     * Updating an event that does not exist results in adding the event.
+     * Deleting an event that does not exist results in no action and no errors.
+     * @return a response that indicates the number of changes, a boolean indicating any errors and a text with possible errors.
+     */
+    fun write(request: EventWriteRequest): WriteResponse {
+        val handler = Injector.injectEventPersistencyHandler()
+        return handler.write(request)
+    }
+
+
+}
+
+
+
+/**
+ * Endpoint for persistency of Configs.
+ */
+class ConfigPersistencyApi {
+
+    /**
+     * Reads Configs, the request defines how the data is retrieved.
+     * @return a response that gives the result of the reading, a boolean indicating any errors and a text with possible errors.
+     */
+    fun read(request: ConfigReadRequest): ConfigReadResponse {
+        val handler = Injector.injectConfigPersistencyHandler()
+        return handler.read(request)
+    }
+
+    /**
+     * Changes data for configs, the request defines how the data is changed.
+     * Updating a config that does not exist results in adding the config.
+     * Deleting a config that does not exist results in no action and no errors.
+     * @return a response that indicates the number of changes, a boolean indicating any errors and a text with possible errors.
+     */
+    fun write(request: ConfigWriteRequest): WriteResponse {
+        val handler = Injector.injectConfigPersistencyHandler()
+        return handler.write(request)
+    }
+
+
+}

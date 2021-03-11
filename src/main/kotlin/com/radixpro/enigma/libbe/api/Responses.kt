@@ -8,8 +8,7 @@
 
 package com.radixpro.enigma.libbe.api
 
-import com.radixpro.enigma.libbe.domain.BaseChartPositions
-import com.radixpro.enigma.libbe.domain.TimeSeriesValues
+import com.radixpro.enigma.libbe.domain.*
 
 interface Response {
     val result: Any
@@ -37,3 +36,21 @@ data class BaseChartResponse(override val result: BaseChartPositions,
 data class TimeSeriesResponse(override val result: List<TimeSeriesValues>,
                               override val errors: Boolean,
                               override val comments: String): Response
+
+data class WriteResponse(override val result: Int,
+                         override val errors: Boolean,
+                         override val comments: String): Response
+
+data class ChartReadResponse(override val result: List<ChartData>,
+                             override val errors: Boolean,
+                             override val comments: String): Response
+
+data class EventReadResponse(override val result: List<ChartEvent>,
+                             override val errors: Boolean,
+                             override val comments: String): Response
+
+data class ConfigReadResponse(override val result: List<Config>,
+                              override val errors: Boolean,
+                              override val comments: String): Response
+
+

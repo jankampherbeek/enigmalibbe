@@ -12,6 +12,7 @@ import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsv
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import com.radixpro.enigma.libbe.domain.ChartEvent
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -32,8 +33,9 @@ class EventDao {
      * Reads all events from a file.
      */
     fun readAll(fileAndPath: String): MutableList<ChartEvent> {
-        return CsvToBeanBuilder<ChartEvent>(FileReader(fileAndPath))
+        return if (File(fileAndPath).exists()) CsvToBeanBuilder<ChartEvent>(FileReader(fileAndPath))
             .withType(ChartEvent::class.java).build().parse()
+        else mutableListOf()
     }
 
     /**
@@ -80,7 +82,7 @@ class EventDao {
     fun update(fileAndPath: String, event2Update: ChartEvent) {
         val id = event2Update.id
         val allEvents = readAll(fileAndPath)
-        var newEvent: MutableList<ChartEvent> = mutableListOf()
+        val newEvent: MutableList<ChartEvent> = mutableListOf()
         for (event: ChartEvent in allEvents) {
             if (event.id != id) newEvent.add(event)
         }
@@ -95,7 +97,7 @@ class EventDao {
     fun delete(fileAndPath: String, event2Delete: ChartEvent) {
         val id = event2Delete.id
         val allEvents = readAll(fileAndPath)
-        var newEvents: MutableList<ChartEvent> = mutableListOf()
+        val newEvents: MutableList<ChartEvent> = mutableListOf()
         for (event: ChartEvent in allEvents) {
             if (event.id != id) newEvents.add(event)
         }
