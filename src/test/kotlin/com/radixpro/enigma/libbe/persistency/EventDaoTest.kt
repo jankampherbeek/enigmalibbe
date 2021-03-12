@@ -32,7 +32,7 @@ internal class EventDaoTest {
     @Test
     fun `Writing and reading a set of events should result in the originally saved events`() {
         initializeCsvFile()
-        val results = dao.readAll(fileAndPath)
+        val results = dao.readAll(fileAndPath) as List<ChartEvent>
         results.size shouldBe 3
         for (event: ChartEvent in results) {
             if (event.id == 2) event.description shouldBe "descr2"
@@ -42,7 +42,7 @@ internal class EventDaoTest {
     @Test
     fun `Reading an event for a specific id should return the correct event`() {
         initializeCsvFile()
-        val result = dao.readForId(fileAndPath, 3)
+        val result = dao.readForId(fileAndPath, 3) as List<ChartEvent>
         result.size shouldBe 1
         result[0].id shouldBe 3
         result[0].description shouldBe "descr3"
@@ -60,9 +60,9 @@ internal class EventDaoTest {
     fun `Adding an event to an existing file should give the correct result`() {
         initializeCsvFile()
         dao.add(fileAndPath, persEventNew)
-        val result1 = dao.readAll(fileAndPath)
+        val result1 = dao.readAll(fileAndPath) as List<ChartEvent>
         result1.size shouldBe 4
-        val result2 = dao.readForId(fileAndPath,4)
+        val result2 = dao.readForId(fileAndPath,4) as List<ChartEvent>
         result2[0].description shouldBe "descr-new"
     }
 
@@ -71,12 +71,12 @@ internal class EventDaoTest {
         initializeCsvFile()
         dao.update(fileAndPath, persEventUpdate)
         dao.readAll(fileAndPath).size shouldBe 3
-        val result = dao.readForId(fileAndPath, 2)[0]
-        result.description shouldBe "descr-updated"
+        val result = dao.readForId(fileAndPath, 2) as List<ChartEvent>
+        result[0].description shouldBe "descr-updated"
     }
 
     @Test
-    fun `Deleting an event shoulkd give the expected results`() {
+    fun `Deleting an event should give the expected results`() {
         initializeCsvFile()
         dao.delete(fileAndPath, persEvent2)
         dao.readAll(fileAndPath).size shouldBe 2

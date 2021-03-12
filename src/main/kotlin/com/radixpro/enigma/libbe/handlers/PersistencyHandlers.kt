@@ -12,7 +12,32 @@ import com.radixpro.enigma.libbe.api.*
 import com.radixpro.enigma.libbe.domain.*
 import com.radixpro.enigma.libbe.persistency.ChartDao
 import com.radixpro.enigma.libbe.persistency.ConfigDao
+import com.radixpro.enigma.libbe.persistency.Dao
 import com.radixpro.enigma.libbe.persistency.EventDao
+
+abstract class PersistencyHandler(val dao: Dao) {
+
+    fun write(request: WriteRequest): WriteResponse {
+        var errors = false
+        var comments = ""
+        var nrOfChanges = 0
+        try {
+            nrOfChanges = 1
+            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.items[0])
+            if (request.action == WriteActions.WRITEALL) {
+                dao.writeAll(request.fileAndPath, request.items)
+                nrOfChanges = request.items.size
+            }
+            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.items[0])
+            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.items[0])
+        } catch(e: Exception) {
+            errors = true
+            comments+= "Error while writing chart(s): " + e.message
+        }
+        return WriteResponse(nrOfChanges, errors, comments)
+    }
+}
+
 
 class ChartPersistencyHandler(private val dao: ChartDao) {
 
@@ -22,13 +47,13 @@ class ChartPersistencyHandler(private val dao: ChartDao) {
         var nrOfChanges = 0
         try {
             nrOfChanges = 1
-            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.charts[0])
+            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.items[0])
             if (request.action == WriteActions.WRITEALL) {
-                dao.writeAll(request.fileAndPath, request.charts)
-                nrOfChanges = request.charts.size
+                dao.writeAll(request.fileAndPath, request.items)
+                nrOfChanges = request.items.size
             }
-            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.charts[0])
-            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.charts[0])
+            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.items[0])
+            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.items[0])
         } catch(e: Exception) {
             errors = true
             comments+= "Error while writing chart(s): " + e.message
@@ -41,8 +66,8 @@ class ChartPersistencyHandler(private val dao: ChartDao) {
         var comments = ""
         var resultData: List<ChartData> = ArrayList()
         try {
-            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath)
-            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId)
+            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath) as List<ChartData>
+            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId) as List<ChartData>
             if (request.action == ReadActions.SEARCHFORNAME) resultData = dao.searchForName(request.fileAndPath, request.searchPartOfName)
             if (request.action == ReadActions.READFORCHARTID) {
                 errors = true
@@ -64,13 +89,13 @@ class EventPersistencyHandler(private val dao: EventDao) {
         var nrOfChanges = 0
         try {
             nrOfChanges = 1
-            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.events[0])
+            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.items[0])
             if (request.action == WriteActions.WRITEALL) {
-                dao.writeAll(request.fileAndPath, request.events)
-                nrOfChanges = request.events.size
+                dao.writeAll(request.fileAndPath, request.items)
+                nrOfChanges = request.items.size
             }
-            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.events[0])
-            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.events[0])
+            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.items[0])
+            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.items[0])
         } catch(e: Exception) {
             errors = true
             comments+= "Error while writing chart(s): " + e.message
@@ -83,8 +108,8 @@ class EventPersistencyHandler(private val dao: EventDao) {
         var comments = ""
         var resultData: List<ChartEvent> = ArrayList()
         try {
-            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath)
-            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId)
+            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath) as List<ChartEvent>
+            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId) as List<ChartEvent>
             if (request.action == ReadActions.READFORCHARTID) resultData = dao.readForChartId(request.fileAndPath, request.searchId)
         } catch(e: Exception) {
             errors = true
@@ -105,13 +130,13 @@ class ConfigPersistencyHandler(private val dao: ConfigDao) {
         var nrOfChanges = 0
         try {
             nrOfChanges = 1
-            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.configs[0])
+            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.items[0])
             if (request.action == WriteActions.WRITEALL) {
-                dao.writeAll(request.fileAndPath, request.configs)
-                nrOfChanges = request.configs.size
+                dao.writeAll(request.fileAndPath, request.items)
+                nrOfChanges = request.items.size
             }
-            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.configs[0])
-            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.configs[0])
+            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.items[0])
+            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.items[0])
         } catch(e: Exception) {
             errors = true
             comments+= "Error while writing config(s): " + e.message
@@ -124,8 +149,8 @@ class ConfigPersistencyHandler(private val dao: ConfigDao) {
         var comments = ""
         var resultData: List<Config> = ArrayList()
         try {
-            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath)
-            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId)
+            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath) as List<Config>
+            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId) as List<Config>
             if (request.action == ReadActions.READFORCHARTID) {
                 errors = true
                 comments+= "Read for chartId is only supported for events"

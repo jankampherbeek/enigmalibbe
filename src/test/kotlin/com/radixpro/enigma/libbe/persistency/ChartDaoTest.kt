@@ -8,8 +8,8 @@
 
 package com.radixpro.enigma.libbe.persistency
 
-import com.radixpro.enigma.libbe.domain.ChartTypes
 import com.radixpro.enigma.libbe.domain.ChartData
+import com.radixpro.enigma.libbe.domain.ChartTypes
 import com.radixpro.enigma.libbe.domain.Ratings
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -38,7 +38,7 @@ internal class ChartDaoTest {
     @Test
     fun `Writing and reading a set of charts should result in the originally saved charts`() {
         initializeCsvFile()
-        val results = dao.readAll(fileAndPath)
+        val results = dao.readAll(fileAndPath) as List<ChartData>
         results.size shouldBe 3
         for (chartData: ChartData in results) {
             if (chartData.id == 2) chartData.description shouldBe "Descr2"
@@ -48,7 +48,7 @@ internal class ChartDaoTest {
     @Test
     fun `Reading a chart for a specific id should return the correct chart`() {
         initializeCsvFile()
-        val result = dao.readForId(fileAndPath, 3)
+        val result = dao.readForId(fileAndPath, 3) as List<ChartData>
         result.size shouldBe 1
         result[0].id shouldBe 3
         result[0].description shouldBe "Descr3"
@@ -74,9 +74,9 @@ internal class ChartDaoTest {
     fun `Adding a chart to an existing file should give the correct result`() {
         initializeCsvFile()
         dao.add(fileAndPath, persChartNew)
-        val result1 = dao.readAll(fileAndPath)
+        val result1 = dao.readAll(fileAndPath) as List<ChartData>
         result1.size shouldBe 4
-        val result2 = dao.readForId(fileAndPath,4)
+        val result2 = dao.readForId(fileAndPath,4) as List<ChartData>
         result2[0].description shouldBe "Descr-new"
     }
 
@@ -85,8 +85,8 @@ internal class ChartDaoTest {
         initializeCsvFile()
         dao.update(fileAndPath, persChartUpdate)
         dao.readAll(fileAndPath).size shouldBe 3
-        val result = dao.readForId(fileAndPath, 2)[0]
-        result.name shouldBe "Name-updated"
+        val result = dao.readForId(fileAndPath, 2) as List<ChartData>
+        result[0].name shouldBe "Name-updated"
     }
 
     @Test

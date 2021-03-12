@@ -17,14 +17,14 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
 
-class ConfigDao(private val configMapper: ConfigMapper) {
+class ConfigDao(private val configMapper: ConfigMapper): Dao() {
 
     /**
      * Writes all configs to a file and overwrites any previous data.
      */
-    fun writeAll(fileAndPath: String, configs: List<Config>) {
+    override fun writeAll(fileAndPath: String, items: List<Persistable>) {
         val writer: Writer = FileWriter(fileAndPath)
-        val persConfigs = configMapper.config2PersistedConfig(configs)
+        val persConfigs = configMapper.config2PersistedConfig(items as List<Config>)
         val beanToCsv: StatefulBeanToCsv<PersistedConfig> = StatefulBeanToCsvBuilder<PersistedConfig>(writer).build()
         beanToCsv.write(persConfigs)
         writer.close()
@@ -33,80 +33,18 @@ class ConfigDao(private val configMapper: ConfigMapper) {
     /**
      * Reads all configs from a file.
      */
-    fun readAll(fileAndPath: String): MutableList<Config> {
+    override fun readAll(fileAndPath: String): MutableList<Persistable> {
         return if (File(fileAndPath).exists()) {
             val persConfigs = CsvToBeanBuilder<PersistedConfig>(FileReader(fileAndPath))
-                .withType(PersistedConfig::class.java).build().parse()
-            configMapper.persistedConfig2Config(persConfigs)
+                .withType(PersistedConfig::class.java).build().parse() as MutableList<Persistable>
+            configMapper.persistedConfig2Config(persConfigs as List<PersistedConfig>) as MutableList<Persistable>
         } else mutableListOf()
-
     }
 
-    /**
-     * Returns all configs that have a specific id.
-     * The result is a list but should contain not more than one config as id is unique.
-     * If no config is found the list will be empty.
-     */
-    fun readForId(fileAndPath: String, id: Int): List<Config> {
-        val allConfigs = readAll(fileAndPath)
-        val searchResult = mutableListOf<Config>()
-        for (config in allConfigs) {
-            if (config.id == id) searchResult.add(config)
-        }
-        return searchResult
+    override fun defineItemType(item: Persistable): Persistable {
+        return item as Config
     }
-
-    /**
-     * Adds a config to a given file without deleting previous data.
-     */
-    fun add(fileAndPath: String, config: Config) {
-        val allConfigs: MutableList<Config> = readAll(fileAndPath).toMutableList()
-        val nextId = findNextId(allConfigs)
-        config.id = nextId
-        allConfigs.add(config)
-        writeAll(fileAndPath, allConfigs)
-    }
-
-    /**
-     * Updates a specific config that has the same id as config2Update.
-     */
-    fun update(fileAndPath: String, config2Update: Config) {
-        val id = config2Update.id
-        val allConfigs = readAll(fileAndPath)
-        val newConfig: MutableList<Config> = mutableListOf()
-        for (config: Config in allConfigs) {
-            if (config.id != id) newConfig.add(config)
-        }
-        newConfig.add(config2Update)
-        writeAll(fileAndPath, newConfig)
-    }
-
-
-    /**
-     * Calculates the next available id, comparable to a sequence in a RDBMS.
-     */
-    private fun findNextId(allConfigs: List<Config>): Int {
-        var nextId = 1
-        for (config: Config in allConfigs) {
-            if (config.id >= nextId) nextId = config.id+1
-        }
-        return nextId
-    }
-
-    /**
-     * Deletes a config that has the same id as config2Delete.
-     */
-    fun delete(fileAndPath: String, config2Delete: Config) {
-        val id = config2Delete.id
-        val allConfigs = readAll(fileAndPath)
-        val newConfigs: MutableList<Config> = mutableListOf()
-        for (config: Config in allConfigs) {
-            if (config.id != id) newConfigs.add(config)
-        }
-        writeAll(fileAndPath, newConfigs)
-    }
-
-}
+ }
 
 class ConfigMapper(private val celPointsTextMapper: CelPointsTextMapper, private val aspectsTextMapper: AspectsTextMapper) {
 

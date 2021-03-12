@@ -40,7 +40,7 @@ internal class ConfigDaoTest {
     @Test
     fun `Writing and reading a set of configs should result in the originally saved configs`() {
         initializeCsvFile()
-        val results = dao.readAll(fileAndPath)
+        val results = dao.readAll(fileAndPath) as List<Config>
         results.size shouldBe 3
         for (config: Config in results) {
             if (config.id == 2) config.description shouldBe "descr-2"
@@ -51,7 +51,7 @@ internal class ConfigDaoTest {
     @Test
     fun `Reading a config for a specific id should return the correct config`() {
         initializeCsvFile()
-        val result = dao.readForId(fileAndPath, 3)
+        val result = dao.readForId(fileAndPath, 3) as List<Config>
         result.size shouldBe 1
         result[0].id shouldBe 3
         result[0].description shouldBe "descr-3"
@@ -61,9 +61,9 @@ internal class ConfigDaoTest {
     fun `Adding a config to an existing file should give the correct result`() {
         initializeCsvFile()
         dao.add(fileAndPath,configNew)
-        val result1 = dao.readAll(fileAndPath)
+        val result1 = dao.readAll(fileAndPath) as List<Config>
         result1.size shouldBe 4
-        val result2 = dao.readForId(fileAndPath,4)
+        val result2 = dao.readForId(fileAndPath,4) as List<Config>
         result2[0].description shouldBe "descr-new"
     }
 
@@ -72,9 +72,9 @@ internal class ConfigDaoTest {
         initializeCsvFile()
         dao.update(fileAndPath, configUpdate)
         dao.readAll(fileAndPath).size shouldBe 3
-        val result = dao.readForId(fileAndPath, 2)[0]
-        result.description shouldBe "descr-updated"
-        result.name shouldBe "Update"
+        val result = dao.readForId(fileAndPath, 2) as List<Config>
+        result[0].description shouldBe "descr-updated"
+        result[0].name shouldBe "Update"
     }
 
     @Test

@@ -15,8 +15,13 @@ import com.opencsv.bean.CsvBindByName
  * This forces Kotlin to add an empty constructor which is required by OpenCSV.
  */
 
+interface Persistable {
+    var id: Int
+}
+
+
 data class ChartData(
-    var id: Int = 0,
+    override var id: Int = 0,
     val name: String = "",
     val description: String  = "",
     val rating: Ratings = Ratings.UNKNOWN,
@@ -25,20 +30,20 @@ data class ChartData(
     val geoLat: Double = 0.0,
     val geoLon: Double = 0.0,
     val input: String = ""
-)
+): Persistable
 
 data class ChartEvent(
-    var id: Int = 0,
+    override var id: Int = 0,
     val chartId: Int = 0,
     val description: String = "",
     val jdUt: Double = 0.0,
     val geoLat: Double = 0.0,
     val geoLon: Double = 0.0,
     val input: String= ""
-)
+): Persistable
 
 data class PersistedConfig(
-    @CsvBindByName var id: Int = 0,
+    @CsvBindByName override var id: Int = 0,
     @CsvBindByName val name: String = "",
     @CsvBindByName val description: String = "",
     @CsvBindByName val ayanamsha: Ayanamshas = Ayanamshas.NONE,
@@ -46,11 +51,10 @@ data class PersistedConfig(
     @CsvBindByName val observerPos: ObserverPos = ObserverPos.GEOCENTRIC,
     @CsvBindByName val celPointsText: String = "",
     @CsvBindByName val aspectsText: String = ""
-
-)
+): Persistable
 
 data class Config(
-    var id: Int,
+    override var id: Int,
     val name: String,
     val description: String,
     val ayanamsha: Ayanamshas,
@@ -58,7 +62,7 @@ data class Config(
     val observerPos: ObserverPos,
     val celPoints: List<PersistedCelPoint>,
     val aspects: List<PersistedAspect>
-)
+): Persistable
 
 data class PersistedCelPoint(
     val celPoint: CelPoints,
