@@ -15,7 +15,7 @@ import com.radixpro.enigma.libbe.persistency.ChartDao
 import com.radixpro.enigma.libbe.persistency.Dao
 import com.radixpro.enigma.libbe.persistency.EventDao
 
-abstract class PersistencyHandler() {
+abstract class PersistencyHandler {
 
     abstract var dao: Dao
 
@@ -55,7 +55,8 @@ abstract class PersistencyHandler() {
                 }
             }
             if (request.action == ReadActions.READFORCHARTID) {
-                if (request is EventReadRequest) resultData = (dao as EventDao).readForChartId(request.fileAndPath, request.searchId) as List<Persistable>
+                if (request is EventReadRequest) resultData =
+                    (dao as EventDao).readForChartId(request.fileAndPath, request.searchId)
 
                 errors = true
                 comments+= "Read for chartId is only supported for events"

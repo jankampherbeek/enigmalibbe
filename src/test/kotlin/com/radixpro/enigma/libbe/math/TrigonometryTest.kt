@@ -5,7 +5,6 @@
  */
 package com.radixpro.enigma.libbe.math
 
-import com.radixpro.enigma.libbe.math.Trigonometry
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import org.junit.Test
