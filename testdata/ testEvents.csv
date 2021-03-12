@@ -1,0 +1,4 @@
+"CHARTID","DESCRIPTION","GEOLAT","GEOLON","ID","INPUT","JDUT"
+"1","descr1","10.0","20.0","1","Source: xxx, Location: yyy, Coordinates: 10.00.00 N/20.00.00 E, Date: ..... G, Time: 12:00:00 UT","2444406.5"
+"1","descr2","14.0","-24.0","2","Source: aaa, Location: bbb, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT","2444506.5"
+"11","descr3","14.0","-24.0","3","Source: ccc, Location: ddd, Coordinates: 14.00.00 N/24.00.00 W, Date: ..... G, Time: 12:00:00 UT","2444606.5"
