@@ -16,12 +16,18 @@ interface Response {
     val comments: String
 }
 
+interface ReadResponse {
+    val result: List<Persistable>
+    val errors: Boolean
+    val comments: String
+}
+
 /**
  * Response for a single position.
  */
 data class SingleDoubleResponse(override val result: Double,
-                           override val errors: Boolean,
-                           override val comments: String): Response
+                                override val errors: Boolean,
+                                override val comments: String): Response
 
 /**
  * Response for a calculated Base Chart.
@@ -43,14 +49,13 @@ data class WriteResponse(override val result: Int,
 
 data class ChartReadResponse(override val result: List<ChartData>,
                              override val errors: Boolean,
-                             override val comments: String): Response
+                             override val comments: String): ReadResponse
 
 data class EventReadResponse(override val result: List<ChartEvent>,
                              override val errors: Boolean,
-                             override val comments: String): Response
+                             override val comments: String): ReadResponse
 
 data class ConfigReadResponse(override val result: List<Config>,
                               override val errors: Boolean,
-                              override val comments: String): Response
-
+                              override val comments: String): ReadResponse
 

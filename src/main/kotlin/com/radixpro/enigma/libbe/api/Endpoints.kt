@@ -71,7 +71,7 @@ class ChartPersistencyApi {
      */
     fun read(request: ChartReadRequest): ChartReadResponse {
         val handler = Injector.injectChartPersistencyHandler()
-        return handler.read(request)
+        return handler.read(request) as ChartReadResponse
     }
 
     /**
@@ -98,7 +98,7 @@ class EventPersistencyApi {
      */
     fun read(request: EventReadRequest): EventReadResponse {
         val handler = Injector.injectEventPersistencyHandler()
-        return handler.read(request)
+        return handler.read(request) as EventReadResponse
     }
 
     /**
@@ -128,7 +128,7 @@ class ConfigPersistencyApi {
      */
     fun read(request: ConfigReadRequest): ConfigReadResponse {
         val handler = Injector.injectConfigPersistencyHandler()
-        return handler.read(request)
+        return handler.read(request) as ConfigReadResponse
     }
 
     /**

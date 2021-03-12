@@ -15,6 +15,7 @@ interface Request
 interface ReadRequest{
     val action: ReadActions
     val fileAndPath: String
+    val searchId: Int
 }
 
 interface WriteRequest{
@@ -40,17 +41,17 @@ data class TimeSeriesRequest(val celPoints: List<CelPoints>, val observerPos: Ob
 data class ChartWriteRequest(override val action: WriteActions, override val fileAndPath: String,
                              override val items: List<ChartData>): WriteRequest
 
-data class ChartReadRequest(override val action: ReadActions, override val fileAndPath: String, val searchId: Int = 0,
+data class ChartReadRequest(override val action: ReadActions, override val fileAndPath: String, override val searchId: Int = 0,
                             val searchPartOfName: String = ""): ReadRequest
 
 data class EventWriteRequest(override val action: WriteActions, override val fileAndPath: String,
                              override val items: List<ChartEvent>): WriteRequest
 
 data class EventReadRequest(override val action: ReadActions, override val fileAndPath: String,
-                            val searchId: Int = 0): ReadRequest
+                            override val searchId: Int = 0): ReadRequest
 
 data class ConfigWriteRequest(override val action: WriteActions, override val fileAndPath: String,
                               override val items: List<Config>): WriteRequest
 
 data class ConfigReadRequest(override val action: ReadActions, override val fileAndPath: String,
-                             val searchId: Int = 0): ReadRequest
+                             override val searchId: Int = 0): ReadRequest
