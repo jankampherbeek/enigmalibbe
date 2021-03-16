@@ -42,12 +42,12 @@ class BaseChartHandler(
         val obliquity = epsilon.calcTrueEpsilon(actRequest.jdUt).first
         val asc = constructBaseHousePoint(ascEcl, obliquity)
         val mc = constructBaseHousePoint(mcEcl, obliquity)
-        val allCusps: MutableList<BaseHousePoint> = ArrayList()
+        val allCusps: MutableList<BasePosHousePoint> = ArrayList()
         for (cusp in housesCalcResult.second) {
             val cuspEcl = CoordinateSet(cusp, 0.0)
             allCusps.add(constructBaseHousePoint(cuspEcl, obliquity))
         }
-        val result = BaseChartPositions(calculatedCelPoints, BaseHouseSystem(asc, mc, allCusps))
+        val result = BaseChartPositions(calculatedCelPoints, BaseHousePositions(asc, mc, allCusps))
         return BaseChartResponse(result, errors, comments)
     }
 
@@ -69,10 +69,10 @@ class BaseChartHandler(
         return BasePosCelPoint(celPoint, eclPos, equPos, eclSpeed, equSpeed)
     }
 
-    private fun constructBaseHousePoint(cuspEcl: CoordinateSet, obliquity: Double): BaseHousePoint {
+    private fun constructBaseHousePoint(cuspEcl: CoordinateSet, obliquity: Double): BasePosHousePoint {
         val cuspEquCoord = CoordinateConversions.eclipticToEquatorial(doubleArrayOf(cuspEcl.position, 0.0), obliquity)
         val cuspEqu = CoordinateSet(cuspEquCoord[0], cuspEquCoord[1])
-        return BaseHousePoint(cuspEcl, cuspEqu)
+        return BasePosHousePoint(cuspEcl, cuspEqu)
     }
 
 }
