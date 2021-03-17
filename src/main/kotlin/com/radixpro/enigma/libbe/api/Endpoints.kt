@@ -19,9 +19,9 @@ class AstronApi {
      * Calculate a base chart.
      * @return the calculated BaseChart.
      */
-    fun calcBaseChart(request: BaseChartRequest): BaseChartResponse {
+    fun calcBaseChart(request: ChartRequest): ChartResponse {
         val baseChartHandler = Injector.injectBaseChartHandler()
-        return baseChartHandler.calcBaseChartPositions(request) as BaseChartResponse
+        return baseChartHandler.calcChartPositions(request) as ChartResponse
     }
 
     /**

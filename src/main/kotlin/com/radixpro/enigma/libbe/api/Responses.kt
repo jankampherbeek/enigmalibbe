@@ -25,37 +25,51 @@ interface ReadResponse {
 /**
  * Response for a single position.
  */
-data class SingleDoubleResponse(override val result: Double,
-                                override val errors: Boolean,
-                                override val comments: String): Response
+data class SingleDoubleResponse(
+    override val result: Double,
+    override val errors: Boolean,
+    override val comments: String
+) : Response
 
 /**
  * Response for a calculated Base Chart.
  */
-data class BaseChartResponse(override val result: BaseChartPositions,
-                             override val errors: Boolean,
-                             override val comments: String): Response
+data class ChartResponse(
+    override val result: ChartPositions,
+    override val errors: Boolean,
+    override val comments: String
+) : Response
 
 /**
  * Response for a Time Series of positions.
  */
-data class TimeSeriesResponse(override val result: List<TimeSeriesValues>,
-                              override val errors: Boolean,
-                              override val comments: String): Response
+data class TimeSeriesResponse(
+    override val result: List<TimeSeriesValues>,
+    override val errors: Boolean,
+    override val comments: String
+) : Response
 
-data class WriteResponse(override val result: Int,
-                         override val errors: Boolean,
-                         override val comments: String): Response
+data class WriteResponse(
+    override val result: Int,
+    override val errors: Boolean,
+    override val comments: String
+) : Response
 
-data class ChartReadResponse(override val result: List<ChartData>,
-                             override val errors: Boolean,
-                             override val comments: String): ReadResponse
+data class ChartReadResponse(
+    override val result: List<ChartData>,
+    override val errors: Boolean,
+    override val comments: String
+) : ReadResponse
 
-data class EventReadResponse(override val result: List<ChartEvent>,
-                             override val errors: Boolean,
-                             override val comments: String): ReadResponse
+data class EventReadResponse(
+    override val result: List<ChartEvent>,
+    override val errors: Boolean,
+    override val comments: String
+) : ReadResponse
 
-data class ConfigReadResponse(override val result: List<Config>,
-                              override val errors: Boolean,
-                              override val comments: String): ReadResponse
+data class ConfigReadResponse(
+    override val result: List<Config>,
+    override val errors: Boolean,
+    override val comments: String
+) : ReadResponse
 

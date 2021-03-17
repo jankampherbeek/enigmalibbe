@@ -101,6 +101,30 @@ class CelPointCalculator(private val swissEph: SwissEph) {
         swissEph.swe_calc_ut(jdUt, id, flags, allPositions, errorMsg)
         return Pair(allPositions, errorMsg.toString())
     }
+
+    /**
+     * Calculate horizontal positions for any point
+     *
+     * @param jdUt     Julian day based on Ephemeris Time
+     * @param eclCoord ecliptical coördinates: index 0 = longitude, 1 = latitude, 2 = distance
+     * @param location geographic latitude and longitude
+     * @param flags    combined settings for the SE
+     * @return calculated positions (Azimuth and Altitude)
+     */
+    fun getHorizontalPosition(jdUt: Double,
+                              eclCoord: DoubleArray,
+                              location: Location,
+                              flags: Int): DoubleArray {
+        require(3 == eclCoord.size)
+        val geoPos = doubleArrayOf(location.geoLon, location.geoLat, 0.0)
+        val eclPos = doubleArrayOf(eclCoord[0], eclCoord[1], eclCoord[2])
+        val atPress = 0.0
+        val atTemp = 0.0
+        val azAlt = DoubleArray(3)
+        swissEph.swe_azalt(jdUt, flags, geoPos, atPress, atTemp, eclPos, azAlt)
+        return azAlt
+    }
+
 }
 
 class HousesCalculator(private val swissEph: SwissEph) {

@@ -45,8 +45,7 @@ data class FullPosCelPoint(
     val equCoord: CoordinateSet,
     val eclSpeed: CoordinateSet,
     val equSpeed: CoordinateSet,
-    val horCoord: CoordinateSet,
-    val distance: Double) : PosCelPoint
+    val horCoord: CoordinateSet) : PosCelPoint
 
 // ------------ House Points ----------------------------------
 
@@ -104,8 +103,6 @@ data class BaseHousePositions(
 data class FullHousePositions(
     override val asc: FullPosHousePoint,
     override val mc: FullPosHousePoint,
-    val vertex: FullPosHousePoint,
-    val eastPoint: FullPosHousePoint,
     override val cusps: List<FullPosHousePoint>
 ) : HousePositions
 

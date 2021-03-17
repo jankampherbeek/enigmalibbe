@@ -14,51 +14,61 @@ import com.radixpro.enigma.libbe.domain.*
 import swisseph.SweConst
 import kotlin.Double.Companion.NaN
 
-class BaseChartHandler(
-    private val celPointCalculator: CelPointCalculator,
-    private val housesCalculator: HousesCalculator,
-    private val epsilon: Epsilon
-) {
-
-    private val eclFlags = 2 or 256 // Use Swiss Eph and speed
+abstract class ChartHandler(private val celPointCalculator: CelPointCalculator,
+                            private val housesCalculator: HousesCalculator,
+                            private val epsilon: Epsilon
+){
+    protected val eclFlags = 2 or 256 // Use Swiss Eph and speed
     private val equFlags = eclFlags or SweConst.SEFLG_EQUATORIAL
     private var comments = ""
     private var errors = false
+    protected var jdUt = 0.0
+    protected var obliquity = 0.0
+    protected var location = Location(0.0,  0.0)
 
-    fun calcBaseChartPositions(request: Request): Response {
+    fun calcChartPositions(request: Request): Response {
         comments = ""     // reset to handle subsequent calls
         errors = false
-        val actRequest = request as BaseChartRequest
-        val calculatedCelPoints: MutableList<BasePosCelPoint> = ArrayList()
+        val actRequest = request as ChartRequest
+        jdUt = actRequest.jdUt
+        location = actRequest.location
+        val obliquityResult = epsilon.calcTrueEpsilon(jdUt)
+        obliquity = obliquityResult.first
+        comments+= obliquityResult.second
+        val calculatedCelPoints: MutableList<PosCelPoint> = ArrayList()
         for (celPoint in actRequest.celPoints) {
-            calculatedCelPoints.add(constructBasePosCelPoint(actRequest.jdUt, celPoint, actRequest.location))
+            calculatedCelPoints.add(definePosCelPoint(celPoint))
         }
         val housesCalcResult = housesCalculator.calcPositionsForHouses(
-            actRequest.jdUt, eclFlags, actRequest.location,
+            jdUt, eclFlags, actRequest.location,
             actRequest.houseSystem.seId.toInt(), actRequest.houseSystem.nrOfCusps
         )
         val ascEcl = CoordinateSet(housesCalcResult.first[0], 0.0)
         val mcEcl = CoordinateSet(housesCalcResult.first[1], 0.0)
-        val obliquity = epsilon.calcTrueEpsilon(actRequest.jdUt).first
-        val asc = constructBaseHousePoint(ascEcl, obliquity)
-        val mc = constructBaseHousePoint(mcEcl, obliquity)
-        val allCusps: MutableList<BasePosHousePoint> = ArrayList()
+        val asc = constructPosHousePoint(ascEcl)
+        val mc = constructPosHousePoint(mcEcl)
+        val allCusps: MutableList<PosHousePoint> = ArrayList()
         for (cusp in housesCalcResult.second) {
             val cuspEcl = CoordinateSet(cusp, 0.0)
-            allCusps.add(constructBaseHousePoint(cuspEcl, obliquity))
+            allCusps.add(constructPosHousePoint(cuspEcl))
         }
-        val result = BaseChartPositions(calculatedCelPoints, BaseHousePositions(asc, mc, allCusps))
-        return BaseChartResponse(result, errors, comments)
+        val result = constructResult(calculatedCelPoints, asc, mc, allCusps)
+        return ChartResponse(result, errors, comments)
     }
 
-    private fun constructBasePosCelPoint(jdUt: Double, celPoint: CelPoints, location: Location): BasePosCelPoint {
+    protected fun defineEclPosCelPoint(celPoint: CelPoints): Triple<CoordinateSet, CoordinateSet, Double> {
         val eclCalcResult = celPointCalculator.calcMainPositionsForCelPoint(jdUt, celPoint.seId, eclFlags, location)
         val eclPos = CoordinateSet(eclCalcResult.first[0], eclCalcResult.first[1])
+        val distance = eclCalcResult.first[2]
         val eclSpeed = CoordinateSet(eclCalcResult.first[3], eclCalcResult.first[4])
         if (eclCalcResult.second.isNotEmpty()) {
             comments += eclCalcResult.second
             errors = true
         }
+        return Triple(eclPos, eclSpeed, distance)
+    }
+
+    protected fun defineEquPosCelPoint(celPoint: CelPoints): Pair<CoordinateSet, CoordinateSet> {
         val equCalcResult = celPointCalculator.calcMainPositionsForCelPoint(jdUt, celPoint.id, equFlags, location)
         val equPos = CoordinateSet(equCalcResult.first[0], equCalcResult.first[1])
         val equSpeed = CoordinateSet(equCalcResult.first[3], equCalcResult.first[4])
@@ -66,16 +76,113 @@ class BaseChartHandler(
             comments += equCalcResult.second
             errors = true
         }
-        return BasePosCelPoint(celPoint, eclPos, equPos, eclSpeed, equSpeed)
+        return Pair(equPos, equSpeed)
     }
 
-    private fun constructBaseHousePoint(cuspEcl: CoordinateSet, obliquity: Double): BasePosHousePoint {
+    protected abstract fun constructPosHousePoint(cuspEcl: CoordinateSet): PosHousePoint
+
+    protected abstract fun constructResult(calculatedCelPoints: List<PosCelPoint>, asc: PosHousePoint, mc: PosHousePoint,
+                                               allCusps: List<PosHousePoint>) : ChartPositions
+
+    protected abstract fun definePosCelPoint(celPoint: CelPoints): PosCelPoint
+}
+
+class SimpleChartHandler(
+    private val celPointCalculator: CelPointCalculator,
+    private val housesCalculator: HousesCalculator,
+    private val epsilon: Epsilon
+): ChartHandler(celPointCalculator, housesCalculator, epsilon) {
+
+    override fun definePosCelPoint(celPoint: CelPoints): PosCelPoint {
+        val eclResult = defineEclPosCelPoint(celPoint)
+        return SimplePosCelPoint(celPoint, eclResult.first, eclResult.second)
+    }
+
+    override fun constructPosHousePoint(cuspEcl: CoordinateSet): PosHousePoint {
+        return SimplePosHousePoint(cuspEcl)
+    }
+
+    override fun constructResult(calculatedCelPoints: List<PosCelPoint>, asc: PosHousePoint, mc: PosHousePoint,
+                                 allCusps: List<PosHousePoint>) : ChartPositions{
+        return SimpleChartPositions(calculatedCelPoints as List<SimplePosCelPoint>,
+            SimpleHousePositions(asc as SimplePosHousePoint, mc as SimplePosHousePoint,
+                allCusps as List<SimplePosHousePoint>)
+        )
+    }
+}
+
+
+class BaseChartHandler(
+    private val celPointCalculator: CelPointCalculator,
+    private val housesCalculator: HousesCalculator,
+    private val epsilon: Epsilon
+): ChartHandler(celPointCalculator, housesCalculator, epsilon) {
+
+    override fun definePosCelPoint(celPoint: CelPoints): PosCelPoint {
+        val eclResult = defineEclPosCelPoint(celPoint)
+        val equResult = defineEquPosCelPoint(celPoint)
+        return BasePosCelPoint(celPoint, eclResult.first, equResult.first, eclResult.second, equResult.second)
+    }
+
+    override fun constructPosHousePoint(cuspEcl: CoordinateSet): BasePosHousePoint {
         val cuspEquCoord = CoordinateConversions.eclipticToEquatorial(doubleArrayOf(cuspEcl.position, 0.0), obliquity)
         val cuspEqu = CoordinateSet(cuspEquCoord[0], cuspEquCoord[1])
         return BasePosHousePoint(cuspEcl, cuspEqu)
     }
 
+    override fun constructResult(calculatedCelPoints: List<PosCelPoint>, asc: PosHousePoint, mc: PosHousePoint,
+                                 allCusps: List<PosHousePoint>) : ChartPositions{
+        return BaseChartPositions(calculatedCelPoints as List<BasePosCelPoint>,
+            BaseHousePositions(asc as BasePosHousePoint, mc as BasePosHousePoint,
+                allCusps as List<BasePosHousePoint>)
+        )
+    }
 }
+
+class FullChartHandler(
+    private val celPointCalculator: CelPointCalculator,
+    private val housesCalculator: HousesCalculator,
+    private val epsilon: Epsilon
+): ChartHandler(celPointCalculator, housesCalculator, epsilon) {
+
+
+    override fun definePosCelPoint(celPoint: CelPoints): FullPosCelPoint {
+        val eclResult = defineEclPosCelPoint(celPoint)
+        val equResult = defineEquPosCelPoint(celPoint)
+        val horResult = defineHorPosCelPoint(eclResult.first.position, eclResult.first.deviation)
+        return FullPosCelPoint(celPoint, eclResult.first, equResult.first, eclResult.second, equResult.second,
+            horResult)
+    }
+
+    override fun constructPosHousePoint(cuspEcl: CoordinateSet): FullPosHousePoint {
+        val cuspEquCoord = CoordinateConversions.eclipticToEquatorial(doubleArrayOf(cuspEcl.position, 0.0), obliquity)
+        val cuspEqu = CoordinateSet(cuspEquCoord[0], cuspEquCoord[1])
+        val eclCoord = arrayOf(cuspEcl.position, cuspEcl.deviation).toDoubleArray()
+        val horResult =  celPointCalculator.getHorizontalPosition(jdUt, eclCoord, location, eclFlags)
+        val horCoord = CoordinateSet(horResult[0], horResult[1])
+        return FullPosHousePoint(cuspEcl, cuspEqu, horCoord)
+    }
+
+    override fun constructResult(calculatedCelPoints: List<PosCelPoint>, asc: PosHousePoint, mc: PosHousePoint,
+                                 allCusps: List<PosHousePoint>) : ChartPositions{
+        return FullChartPositions(calculatedCelPoints as List<FullPosCelPoint>,
+            createFullHousePositions(asc, mc, allCusps))
+    }
+
+    private fun defineHorPosCelPoint(lon: Double, lat: Double): CoordinateSet {
+        val eclCoord = arrayOf(lon, lat).toDoubleArray()
+        val horCalcResult = celPointCalculator.getHorizontalPosition(jdUt, eclCoord, location, eclFlags)
+        return CoordinateSet(horCalcResult[0], horCalcResult[1])
+    }
+
+    private fun createFullHousePositions(asc: PosHousePoint, mc: PosHousePoint,
+                                         allCusps: List<PosHousePoint>): FullHousePositions {
+        return FullHousePositions(asc as FullPosHousePoint, mc as FullPosHousePoint,
+            allCusps as List<FullPosHousePoint>)
+    }
+
+}
+
 
 class EpsilonHandler(private val epsilon: Epsilon) {
 

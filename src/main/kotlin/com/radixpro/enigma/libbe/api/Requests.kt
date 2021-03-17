@@ -31,8 +31,8 @@ data class JdUtRequest(val dateTimeParts: DateTimeParts): Request
 
 data class ValidDateRequest(val year:Int, val month: Int, val day: Int, val gregorian: Boolean): Request
 
-data class BaseChartRequest(val jdUt: Double, val celPoints: List<CelPoints>, val houseSystem: HouseSystems,
-                            val location: Location): Request
+data class ChartRequest(val chartRequestType: ChartRequestTypes,val jdUt: Double, val celPoints: List<CelPoints>,
+                        val houseSystem: HouseSystems, val location: Location): Request
 
 data class TimeSeriesRequest(val celPoints: List<CelPoints>, val observerPos: ObserverPos, val coordinates: Coordinates,
                              val startJd: Double, val location: Location = Location(0.0, 0.0),

@@ -35,11 +35,11 @@ internal class AstronApiTest {
         val jdUt = 2434406.8173611113
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
-        val request = BaseChartRequest(jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val request = ChartRequest(ChartRequestTypes.BASE, jdUt, celPoints, HouseSystems.PLACIDUS, location)
         val response = api.calcBaseChart(request)
         response.comments shouldHaveLength 0
         response.errors shouldBe false
-        val celPositions = response.result.celPositions
+        val celPositions = response.result.celPositions as List<BasePosCelPoint>
         celPositions[0].celPoint shouldBe CelPoints.SUN
         celPositions[0].eclCoord.position shouldBe (309.1181602720 plusOrMinus margin)  //309.11816027204895
         celPositions[0].eclSpeed.position shouldBe (1.0153031475 plusOrMinus margin)
@@ -50,7 +50,7 @@ internal class AstronApiTest {
         val jdUt = Double.MAX_VALUE
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
-        val request = BaseChartRequest(jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val request = ChartRequest(ChartRequestTypes.BASE, jdUt, celPoints, HouseSystems.PLACIDUS, location)
         val response = api.calcBaseChart(request)
         response.comments shouldContain "not found"
         response.errors shouldBe true

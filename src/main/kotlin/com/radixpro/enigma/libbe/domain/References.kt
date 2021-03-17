@@ -58,6 +58,12 @@ enum class ChartTypes {
     ELECTION
 }
 
+enum class ChartRequestTypes {
+    SIMPLE,
+    BASE,
+    FULL
+}
+
 
 /**
  * Categories for celestial points.
@@ -219,7 +225,6 @@ enum class CelPoints(
 
     }
 
-
     enum class WriteActions {
         WRITEALL,
         ADD,
@@ -233,5 +238,7 @@ enum class CelPoints(
         READFORCHARTID,
         SEARCHFORNAME
     }
+
+
 
 
