@@ -72,12 +72,20 @@ object Injector {
         return EventPersistencyHandler()
     }
 
+    fun injectFullChartHandler(): FullChartHandler {
+        return FullChartHandler(injectCelPointCalculator(), injectHousesCalculator(), injectEpsilon())
+    }
+
     private fun injectHousesCalculator(): HousesCalculator {
         return HousesCalculator(injectSwissEph())
     }
 
     private fun injectJulianDayNr(): JulianDayNr{
         return JulianDayNr()
+    }
+
+    fun injectSimpleChartHandler(): SimpleChartHandler {
+        return SimpleChartHandler(injectCelPointCalculator(), injectHousesCalculator(), injectEpsilon())
     }
 
     private fun injectSwissEph(): SwissEph {
