@@ -17,6 +17,7 @@ import com.radixpro.enigma.libbe.math.Trigonometry.cos
 import com.radixpro.enigma.libbe.math.Trigonometry.sin
 import com.radixpro.enigma.libbe.math.Trigonometry.tan
 import com.radixpro.enigma.libbe.utils.Range
+import swisseph.SweConst.SE_ECL2HOR
 import swisseph.SweDate
 import swisseph.SwissEph
 import swisseph.SwissLib
@@ -108,7 +109,6 @@ class CelPointCalculator(private val swissEph: SwissEph) {
      * @param jdUt     Julian day based on Ephemeris Time
      * @param eclCoord ecliptical coördinates: index 0 = longitude, 1 = latitude, 2 = distance
      * @param location geographic latitude and longitude
-     * @param flags    combined settings for the SE
      * @return calculated positions (Azimuth and Altitude)
      */
     fun getHorizontalPosition(jdUt: Double,
@@ -116,6 +116,7 @@ class CelPointCalculator(private val swissEph: SwissEph) {
                               location: Location,
                               flags: Int): DoubleArray {
         require(3 == eclCoord.size)
+        val flags = SE_ECL2HOR
         val geoPos = doubleArrayOf(location.geoLon, location.geoLat, 0.0)
         val eclPos = doubleArrayOf(eclCoord[0], eclCoord[1], eclCoord[2])
         val atPress = 0.0

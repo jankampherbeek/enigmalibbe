@@ -31,18 +31,53 @@ internal class AstronApiTest {
     }
 
     @Test
+    fun `IT for calculating a SimpleChart should return correct positions`() {
+        val jdUt = 2434406.8173611113
+        val location = Location(52.216666666667, 6.54)
+        val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
+        val request = ChartRequest(ChartRequestTypes.SIMPLE, jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val response = api.calcChart(request)
+        response.comments shouldHaveLength 0
+        response.errors shouldBe false
+        val celPositions = response.result.celPositions as List<SimplePosCelPoint>
+        celPositions[0].celPoint shouldBe CelPoints.SUN
+        celPositions[0].eclCoord.position shouldBe (309.1181602720 plusOrMinus margin)  //309.11816027204895
+    }
+
+    @Test
     fun `IT for calculating a BaseChart should return correct positions`() {
         val jdUt = 2434406.8173611113
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
         val request = ChartRequest(ChartRequestTypes.BASE, jdUt, celPoints, HouseSystems.PLACIDUS, location)
-        val response = api.calcBaseChart(request)
+        val response = api.calcChart(request)
         response.comments shouldHaveLength 0
         response.errors shouldBe false
         val celPositions = response.result.celPositions as List<BasePosCelPoint>
         celPositions[0].celPoint shouldBe CelPoints.SUN
         celPositions[0].eclCoord.position shouldBe (309.1181602720 plusOrMinus margin)  //309.11816027204895
         celPositions[0].eclSpeed.position shouldBe (1.0153031475 plusOrMinus margin)
+        celPositions[0].equCoord.position shouldBe (311.553638129 plusOrMinus margin)
+        celPositions[0].equCoord.deviation shouldBe (-17.9815191878 plusOrMinus margin)
+    }
+
+    @Test
+    fun `IT for calculating a FullChart should return correct positions`() {
+        val jdUt = 2434406.8173611113
+        val location = Location(52.216666666667, 6.54)
+        val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
+        val request = ChartRequest(ChartRequestTypes.FULL, jdUt, celPoints, HouseSystems.PLACIDUS, location)
+        val response = api.calcChart(request)
+        response.comments shouldHaveLength 0
+        response.errors shouldBe false
+        val celPositions = response.result.celPositions as List<FullPosCelPoint>
+        celPositions[0].celPoint shouldBe CelPoints.SUN
+        celPositions[0].eclCoord.position shouldBe (309.1181602720 plusOrMinus margin)  //309.11816027204895
+        celPositions[0].eclSpeed.position shouldBe (1.0153031475 plusOrMinus margin)
+        celPositions[0].equCoord.position shouldBe (311.553638129 plusOrMinus margin)
+        celPositions[0].equCoord.deviation shouldBe (-17.9815191878 plusOrMinus margin)
+        celPositions[0].horCoord.position shouldBe (302.4371043999 plusOrMinus margin )
+        celPositions[0].horCoord.deviation shouldBe (1.4363135411 plusOrMinus margin )
     }
 
     @Test
@@ -51,7 +86,7 @@ internal class AstronApiTest {
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
         val request = ChartRequest(ChartRequestTypes.BASE, jdUt, celPoints, HouseSystems.PLACIDUS, location)
-        val response = api.calcBaseChart(request)
+        val response = api.calcChart(request)
         response.comments shouldContain "not found"
         response.errors shouldBe true
     }

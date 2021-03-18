@@ -69,7 +69,7 @@ abstract class ChartHandler(private val celPointCalculator: CelPointCalculator,
     }
 
     protected fun defineEquPosCelPoint(celPoint: CelPoints): Pair<CoordinateSet, CoordinateSet> {
-        val equCalcResult = celPointCalculator.calcMainPositionsForCelPoint(jdUt, celPoint.id, equFlags, location)
+        val equCalcResult = celPointCalculator.calcMainPositionsForCelPoint(jdUt, celPoint.seId, equFlags, location)
         val equPos = CoordinateSet(equCalcResult.first[0], equCalcResult.first[1])
         val equSpeed = CoordinateSet(equCalcResult.first[3], equCalcResult.first[4])
         if (equCalcResult.second.isNotEmpty()) {
@@ -157,7 +157,7 @@ class FullChartHandler(
     override fun constructPosHousePoint(cuspEcl: CoordinateSet): FullPosHousePoint {
         val cuspEquCoord = CoordinateConversions.eclipticToEquatorial(doubleArrayOf(cuspEcl.position, 0.0), obliquity)
         val cuspEqu = CoordinateSet(cuspEquCoord[0], cuspEquCoord[1])
-        val eclCoord = arrayOf(cuspEcl.position, cuspEcl.deviation).toDoubleArray()
+        val eclCoord = arrayOf(cuspEcl.position, cuspEcl.deviation, 1.0).toDoubleArray()
         val horResult =  celPointCalculator.getHorizontalPosition(jdUt, eclCoord, location, eclFlags)
         val horCoord = CoordinateSet(horResult[0], horResult[1])
         return FullPosHousePoint(cuspEcl, cuspEqu, horCoord)
@@ -170,7 +170,7 @@ class FullChartHandler(
     }
 
     private fun defineHorPosCelPoint(lon: Double, lat: Double): CoordinateSet {
-        val eclCoord = arrayOf(lon, lat).toDoubleArray()
+        val eclCoord = arrayOf(lon, lat, 1.0).toDoubleArray()
         val horCalcResult = celPointCalculator.getHorizontalPosition(jdUt, eclCoord, location, eclFlags)
         return CoordinateSet(horCalcResult[0], horCalcResult[1])
     }

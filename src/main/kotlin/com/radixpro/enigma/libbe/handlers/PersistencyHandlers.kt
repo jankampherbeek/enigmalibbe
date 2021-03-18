@@ -93,8 +93,6 @@ class EventPersistencyHandler: PersistencyHandler() {
     }
 }
 
-
-
 class ConfigPersistencyHandler: PersistencyHandler()  {
 
     override var dao: Dao = Injector.injectConfigDao()
@@ -102,43 +100,5 @@ class ConfigPersistencyHandler: PersistencyHandler()  {
     override fun createResponse(resultData: List<Persistable>, errors: Boolean, comments: String): ReadResponse {
         return ConfigReadResponse(resultData as List<Config>, errors, comments)
     }
-
-//    fun write(request: ConfigWriteRequest): WriteResponse {
-//        var errors = false
-//        var comments = ""
-//        var nrOfChanges = 0
-//        try {
-//            nrOfChanges = 1
-//            if (request.action == WriteActions.ADD) dao.add(request.fileAndPath, request.items[0])
-//            if (request.action == WriteActions.WRITEALL) {
-//                dao.writeAll(request.fileAndPath, request.items)
-//                nrOfChanges = request.items.size
-//            }
-//            if (request.action == WriteActions.UPDATE) dao.update(request.fileAndPath, request.items[0])
-//            if (request.action == WriteActions.DELETE) dao.delete(request.fileAndPath, request.items[0])
-//        } catch(e: Exception) {
-//            errors = true
-//            comments+= "Error while writing config(s): " + e.message
-//        }
-//        return WriteResponse(nrOfChanges, errors, comments)
-//    }
-//
-//    fun read(request: ConfigReadRequest): ConfigReadResponse {
-//        var errors = false
-//        var comments = ""
-//        var resultData: List<Config> = ArrayList()
-//        try {
-//            if (request.action == ReadActions.READALL) resultData = dao.readAll(request.fileAndPath) as List<Config>
-//            if (request.action == ReadActions.READFORID) resultData = dao.readForId(request.fileAndPath, request.searchId) as List<Config>
-//            if (request.action == ReadActions.READFORCHARTID) {
-//                errors = true
-//                comments+= "Read for chartId is only supported for events"
-//            }
-//        } catch(e: Exception) {
-//            errors = true
-//            comments+= "Error while reading config(s): " + e.message
-//        }
-//        return ConfigReadResponse(resultData, errors, comments)
-//    }
 
 }

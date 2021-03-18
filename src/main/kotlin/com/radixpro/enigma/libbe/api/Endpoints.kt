@@ -9,37 +9,20 @@
 package com.radixpro.enigma.libbe.api
 
 import com.radixpro.enigma.libbe.di.Injector
+import com.radixpro.enigma.libbe.domain.ChartRequestTypes
 
 /**
  * Endpoints for astronomy related calculations.
  */
 class AstronApi {
 
-    /**
-     * Calculate a simple chart.
-     * @return the calculated SimpleChart.
-     */
-    fun calcSimpleChart(request: ChartRequest): ChartResponse {
-        val simpleChartHandler = Injector.injectSimpleChartHandler()
-        return simpleChartHandler.calcChartPositions(request) as ChartResponse
-    }
-
-    /**
-     * Calculate a base chart.
-     * @return the calculated BaseChart.
-     */
-    fun calcBaseChart(request: ChartRequest): ChartResponse {
-        val baseChartHandler = Injector.injectBaseChartHandler()
-        return baseChartHandler.calcChartPositions(request) as ChartResponse
-    }
-
-    /**
-     * Calculate a full chart.
-     * @return the calculated FullChart.
-     */
-    fun calcFullChart(request: ChartRequest): ChartResponse {
-        val fullChartHandler = Injector.injectFullChartHandler()
-        return fullChartHandler.calcChartPositions(request) as ChartResponse
+    fun calcChart(request: ChartRequest): ChartResponse {
+        val handler = when (request.chartRequestType) {
+            ChartRequestTypes.SIMPLE -> Injector.injectSimpleChartHandler()
+            ChartRequestTypes.BASE -> Injector.injectBaseChartHandler()
+            ChartRequestTypes.FULL -> Injector.injectFullChartHandler()
+        }
+        return handler.calcChartPositions(request) as ChartResponse
     }
 
     /**
