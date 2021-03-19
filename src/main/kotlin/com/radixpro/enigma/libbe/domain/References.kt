@@ -25,18 +25,27 @@ enum class SeFlags(val seValue: Long) {
 
 }
 
+/**
+ * The position of the observer.
+ */
 enum class ObserverPos {
     GEOCENTRIC,
     TOPOCENTRIC,
     HELIOCENTRIC
 }
 
-enum class Coordinates {
+/**
+ * The types of coordinates.
+ */
+enum class CoordinateTypes {
     ECLIPTICAL,
     EQUATORIAL,
     HORIZONTAL
 }
 
+/**
+ * Ratings according to Louise Rodden, including an 'UNKNOWN' rating.
+ */
 enum class Ratings{
     UNKNOWN,
     AA,
@@ -48,6 +57,9 @@ enum class Ratings{
     XX
 }
 
+/**
+ * Types of charts.
+ */
 enum class ChartTypes {
     UNKNOWN,
     FEMALE,
@@ -58,6 +70,9 @@ enum class ChartTypes {
     ELECTION
 }
 
+/**
+ * Types of chartrequests.
+ */
 enum class ChartRequestTypes {
     SIMPLE,
     BASE,
@@ -154,8 +169,10 @@ enum class CelPoints(
         SUNSHINE_TREINDL(22, 'I', 12, true, false, true)
     }
 
-
-    enum class Ayanamshas(val seId: Int){
+/**
+ * Ayanamsha's including the id for the SE.
+ */
+enum class Ayanamshas(val seId: Int){
         NONE(-1),
         FAGAN(0),
         LAHIRI(1),
@@ -199,6 +216,9 @@ enum class CelPoints(
         GALACTIC_CTR_0CAP(39)
     }
 
+/**
+ * Aspects including the angle.
+ */
     enum class Aspects(angle: Double) {
         CONJUNCTION(0.0),
         OPPOSITION(180.0),
@@ -225,6 +245,9 @@ enum class CelPoints(
 
     }
 
+/**
+ * Types of write-actions for persistable data.
+ */
     enum class WriteActions {
         WRITEALL,
         ADD,
@@ -232,6 +255,9 @@ enum class CelPoints(
         DELETE
     }
 
+/**
+ * Types of read-actions for persisted data.
+ */
     enum class ReadActions {
         READALL,
         READFORID,

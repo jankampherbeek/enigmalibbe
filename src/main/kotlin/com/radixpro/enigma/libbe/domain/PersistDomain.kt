@@ -19,7 +19,9 @@ interface Persistable {
     var id: Int
 }
 
-
+/**
+ * Persistable data for a chart.
+ */
 data class ChartData(
     override var id: Int = 0,
     val name: String = "",
@@ -32,6 +34,9 @@ data class ChartData(
     val input: String = ""
 ): Persistable
 
+/**
+ * Persistable data for an event.
+ */
 data class ChartEvent(
     override var id: Int = 0,
     val chartId: Int = 0,
@@ -42,6 +47,9 @@ data class ChartEvent(
     val input: String= ""
 ): Persistable
 
+/**
+ * Persistable data for a configuration.
+ */
 data class PersistedConfig(
     @CsvBindByName override var id: Int = 0,
     @CsvBindByName val name: String = "",
@@ -53,6 +61,9 @@ data class PersistedConfig(
     @CsvBindByName val aspectsText: String = ""
 ): Persistable
 
+/**
+ * A configuration that is created from PersistedConfig.
+ */
 data class Config(
     override var id: Int,
     val name: String,
@@ -64,12 +75,18 @@ data class Config(
     val aspects: List<PersistedAspect>
 ): Persistable
 
+/**
+ * Persistable celestial point.
+ */
 data class PersistedCelPoint(
     val celPoint: CelPoints,
     val showInDrawing: Boolean,
     val glyph: String
 )
 
+/**
+ * Persistable aspect.
+ */
 data class PersistedAspect(
     val aspect: Aspects,
     val showInDrawing: Boolean,

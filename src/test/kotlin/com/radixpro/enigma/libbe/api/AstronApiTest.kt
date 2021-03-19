@@ -151,7 +151,7 @@ internal class AstronApiTest {
         val location = Location(52.216666666667, 6.54)
         val celPoints = listOf(CelPoints.SUN, CelPoints.MOON, CelPoints.MERCURY)
         val observerPos = ObserverPos.GEOCENTRIC
-        val coordinates = Coordinates.ECLIPTICAL
+        val coordinates = CoordinateTypes.ECLIPTICAL
         val interval = 1.0
         val repeats = 10
         val request = TimeSeriesRequest(celPoints, observerPos, coordinates, startJd, location, interval, repeats)

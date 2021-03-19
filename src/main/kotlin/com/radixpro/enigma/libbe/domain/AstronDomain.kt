@@ -169,6 +169,10 @@ data class Location(
     val geoLon: Double
 )
 
+/**
+ * A set of coordinats that belong to the same coordinate system.
+ * E.g. longitude/latitude, right ascension/declination, azimuth/altitude.
+ */
 data class CoordinateSet(
     val position: Double,
     val deviation: Double

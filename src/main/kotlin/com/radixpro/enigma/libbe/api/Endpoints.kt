@@ -16,6 +16,10 @@ import com.radixpro.enigma.libbe.domain.ChartRequestTypes
  */
 class AstronApi {
 
+    /**
+     * Calculate a chart. The request defines which type of calcualtion is performed (Simple, Base or Full).
+     * @return a response with the calculated chart and possible indication of error(s).
+     */
     fun calcChart(request: ChartRequest): ChartResponse {
         val handler = when (request.chartRequestType) {
             ChartRequestTypes.SIMPLE -> Injector.injectSimpleChartHandler()
@@ -45,6 +49,7 @@ class AstronApi {
 
     /**
      * Checks the validity of a date. Takes the calendar (Gregorian or Julina) into account.
+     * @return true if the data is valid, otherwise false.
      */
     fun isValidDate(request: ValidDateRequest): Boolean {
         val dateTimeHandler = Injector.injectDateTimeHandler()
@@ -52,7 +57,8 @@ class AstronApi {
     }
 
     /**
-     * Calculates timeseries for positions.
+     * Calculates time series for positions.
+     * @return response with the calculated time series and possibly an indication for error(s).
      */
     fun calcTimeSeries(request: TimeSeriesRequest): TimeSeriesResponse {
         val timeSeriesHandler = Injector.injectTimeseriesHandler()

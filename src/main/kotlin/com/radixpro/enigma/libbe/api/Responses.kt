@@ -49,24 +49,36 @@ data class TimeSeriesResponse(
     override val comments: String
 ) : Response
 
+/**
+ * Generic response for writing/changing data.
+ */
 data class WriteResponse(
     override val result: Int,
     override val errors: Boolean,
     override val comments: String
 ) : Response
 
+/**
+ * Response for readng one or more charts.
+ */
 data class ChartReadResponse(
     override val result: List<ChartData>,
     override val errors: Boolean,
     override val comments: String
 ) : ReadResponse
 
+/**
+ * Response for reading one or more events.
+ */
 data class EventReadResponse(
     override val result: List<ChartEvent>,
     override val errors: Boolean,
     override val comments: String
 ) : ReadResponse
 
+/**
+ * Response for reading one or more configurations.
+ */
 data class ConfigReadResponse(
     override val result: List<Config>,
     override val errors: Boolean,

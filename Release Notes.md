@@ -1,7 +1,8 @@
 # Enigma DedBE - releasenotes
 
-### 0.2 - 2021-03-12
-- Persistency for Charts, Events and Configs.  
+### 0.2 - 2021-03-19
+- Persistency for Charts, Events and Configs.
+- Support for three tyes of chart calculations: Simple, Base and Full.
 
 ### 0.1 - 2021-03-03
 - Calculation of Timeseries.
