@@ -55,17 +55,6 @@ class ConfigPersistencyApitest {
     }
 
     @Test
-    fun `Adding a config to a non existing file should create the file and add the config to that file`() {
-        val file = File(fileAndPath)
-        if (file.exists()) file.delete()
-        val configs = listOf(config1)
-        val writeRequest = ConfigWriteRequest(WriteActions.ADD, fileAndPath, configs)
-        api.write(writeRequest).errors shouldBe false
-        val readRequest = ConfigReadRequest(ReadActions.READALL, fileAndPath)
-        api.read(readRequest).result[0] shouldBe config1
-    }
-
-    @Test
     fun `Updating an instance of config should be handled correctly`() {
         val configs = listOf(config1, config2, config3)
         var writeRequest = ConfigWriteRequest(WriteActions.WRITEALL, fileAndPath, configs)

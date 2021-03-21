@@ -57,17 +57,6 @@ class EventPersistencyApiTest {
     }
 
     @Test
-    fun `Adding an event to a non existing file should create the file and add the event to that file`() {
-        val file = File(fileAndPath)
-        if (file.exists()) file.delete()
-        val events = listOf(persEvent1)
-        val writeRequest = EventWriteRequest(WriteActions.ADD, fileAndPath, events)
-        api.write(writeRequest).errors shouldBe false
-        val readRequest = EventReadRequest(ReadActions.READALL, fileAndPath)
-        api.read(readRequest).result[0] shouldBe persEvent1
-    }
-
-    @Test
     fun `Updating an instance of event should be handled correctly`() {
         val events = listOf(persEvent1, persEvent2, persEvent3)
         var writeRequest = EventWriteRequest(WriteActions.WRITEALL, fileAndPath, events)

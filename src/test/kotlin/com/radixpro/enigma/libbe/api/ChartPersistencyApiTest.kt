@@ -50,17 +50,6 @@ internal class ChartPersistencyApiTest {
     }
 
     @Test
-    fun `Adding chartData to a non existing file should create the file and add the chartData to that file`() {
-        val file = File(fileAndPath)
-        if (file.exists()) file.delete()
-        val charts = listOf(persChart1)
-        val writeRequest = ChartWriteRequest(WriteActions.ADD, fileAndPath, charts)
-        api.write(writeRequest).errors shouldBe false
-        val readRequest = ChartReadRequest(ReadActions.READALL, fileAndPath)
-        api.read(readRequest).result[0] shouldBe persChart1
-    }
-
-    @Test
     fun `Updating an instance of chartData should be handled correctly`() {
         val charts = listOf(persChart1, persChart2, persChart3)
         var writeRequest = ChartWriteRequest(WriteActions.WRITEALL, fileAndPath, charts)
