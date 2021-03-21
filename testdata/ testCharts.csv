@@ -1,0 +1,4 @@
+"CHARTTYPE","DESCRIPTION","GEOLAT","GEOLON","ID","INPUT","JDUT","NAME","RATING"
+"MALE","Descr1","52.0","5.5","1","Source: someone told me, Location: Amsterdam, Coordinates: 52.00.00 N/5.30.00 E, Date: 1953/01/29 G, Time: 8:37:30 CET","2434406.8125","Name1","AA"
+"FEMALE","Descr2","50.0","-5.5","2","Source: anything, Location: Somewhere, Coordinates: 50.00.00 N/5.00.00 W, Date: 1953/02/07 G, Time: 12:00:00 UT","2434416.0","Name2","X"
+"HORARY","Descr3","-60.0","-55.5","3","Source: my info, Location: my place, Coordinates: 60.00.00 S/55.30.00 W, Date: ..... G, Time: .....","2434516.0","Name3","B"
