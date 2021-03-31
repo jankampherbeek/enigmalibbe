@@ -18,21 +18,21 @@ internal class ConfigDaoTest {
 
     private val fileAndPath = "." + File.separator + "testdata" + File.separator + " testConfigs.csv"
 
-    private val celPoints = arrayListOf(PersistedCelPoint(CelPoints.SUN, true, "a"),
-        PersistedCelPoint(CelPoints.MOON, true, "b"),
-        PersistedCelPoint(CelPoints.MERCURY, true, "C"))
-    private val aspects = arrayListOf(PersistedAspect(Aspects.CONJUNCTION, true, "B"),
-        PersistedAspect(Aspects.OPPOSITION, true, "C" ))
+    private val celPoints = arrayListOf(PersistedCelPoint(CelPoints.SUN, 100,true, "a"),
+        PersistedCelPoint(CelPoints.MOON, 100,true, "b"),
+        PersistedCelPoint(CelPoints.MERCURY, 80,true, "C"))
+    private val aspects = arrayListOf(PersistedAspect(Aspects.CONJUNCTION, 100,true, "B"),
+        PersistedAspect(Aspects.OPPOSITION, 100,true, "C" ))
     private val config1 = Config(1, "Western", "descr-1", Ayanamshas.NONE,
-        HouseSystems.PLACIDUS, ObserverPos.GEOCENTRIC, celPoints, aspects)
+        HouseSystems.PLACIDUS, ObserverPos.GEOCENTRIC, celPoints, aspects, 10.0, 1.6, 2.0, 1.0)
     private val config2 = Config(2, "Fagan", "descr-2", Ayanamshas.FAGAN,
-        HouseSystems.EQUAL, ObserverPos.GEOCENTRIC, celPoints, aspects)
+        HouseSystems.EQUAL, ObserverPos.GEOCENTRIC, celPoints, aspects, 10.0, 1.6, 2.0, 1.0)
     private val config3 = Config(3, "Helio", "descr-3", Ayanamshas.NONE,
-        HouseSystems.NO_HOUSES, ObserverPos.HELIOCENTRIC, celPoints, aspects)
+        HouseSystems.NO_HOUSES, ObserverPos.HELIOCENTRIC, celPoints, aspects, 10.0, 1.6, 2.0, 1.0)
     private val configNew = Config(0, "New", "descr-new", Ayanamshas.NONE,
-        HouseSystems.NO_HOUSES, ObserverPos.HELIOCENTRIC, celPoints, aspects)
+        HouseSystems.NO_HOUSES, ObserverPos.HELIOCENTRIC, celPoints, aspects, 10.0, 1.6, 2.0, 1.0)
     private val configUpdate = Config(2, "Update", "descr-updated", Ayanamshas.NONE,
-        HouseSystems.ALCABITIUS, ObserverPos.TOPOCENTRIC, celPoints, aspects)
+        HouseSystems.ALCABITIUS, ObserverPos.TOPOCENTRIC, celPoints, aspects, 10.0, 1.6, 2.0, 1.0)
 
     private val dao = Injector.injectConfigDao()
 

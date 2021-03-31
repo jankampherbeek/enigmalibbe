@@ -16,10 +16,10 @@ import org.junit.jupiter.api.Test
 
 internal class AspectsTextMapperTest {
 
-    private val aspectText = "CONJUNCTION;true;B|OPPOSITION;true;C|TRIANGLE;true;D"
-    private val persAspects = listOf(PersistedAspect(Aspects.CONJUNCTION, true, "B"),
-        PersistedAspect(Aspects.OPPOSITION, true, "C"),
-        PersistedAspect(Aspects.TRIANGLE, true, "D"))
+    private val aspectText = "CONJUNCTION;100;true;B|OPPOSITION;100;true;C|TRIANGLE;100;true;D"
+    private val persAspects = listOf(PersistedAspect(Aspects.CONJUNCTION, 100,true, "B"),
+        PersistedAspect(Aspects.OPPOSITION, 100,true, "C"),
+        PersistedAspect(Aspects.TRIANGLE, 100,true, "D"))
     private val mapper = Injector.injectAspectsTextMapper()
 
     @Test

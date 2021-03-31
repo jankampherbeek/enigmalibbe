@@ -16,10 +16,10 @@ import org.junit.jupiter.api.Test
 
 internal class CelPointsTextMapperTest {
 
-    private val celPointText = "SUN;true;a|MOON;true;b|MERCURY;true;c"
-    private val persCelPoints = listOf(PersistedCelPoint(CelPoints.SUN, true, "a"),
-        PersistedCelPoint(CelPoints.MOON, true, "b"),
-        PersistedCelPoint(CelPoints.MERCURY, true, "c"))
+    private val celPointText = "SUN;100;true;a|MOON;100;true;b|MERCURY;80;true;c"
+    private val persCelPoints = listOf(PersistedCelPoint(CelPoints.SUN, 100,true, "a"),
+        PersistedCelPoint(CelPoints.MOON, 100,true, "b"),
+        PersistedCelPoint(CelPoints.MERCURY, 80, true, "c"))
     private val mapper = Injector.injectCelPointsTextMapper()
 
     @Test
@@ -28,7 +28,7 @@ internal class CelPointsTextMapperTest {
     }
 
     @Test
-    fun `Converting a csv text to a list of PersistedCelpoints should gieve the correct result`() {
+    fun `Converting a csv text to a list of PersistedCelpoints should give the correct result`() {
         mapper.createCelPoints(celPointText) shouldBe persCelPoints
     }
 }

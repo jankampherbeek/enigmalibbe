@@ -58,7 +58,12 @@ data class PersistedConfig(
     @CsvBindByName val houseSystem: HouseSystems = HouseSystems.NO_HOUSES,
     @CsvBindByName val observerPos: ObserverPos = ObserverPos.GEOCENTRIC,
     @CsvBindByName val celPointsText: String = "",
-    @CsvBindByName val aspectsText: String = ""
+    @CsvBindByName val aspectsText: String = "",
+    @CsvBindByName val baseOrbAspects: Double = 0.0,
+    @CsvBindByName val baseOrbMidpoints: Double = 0.0,
+    @CsvBindByName val baseOrbHarmonics: Double = 0.0,
+    @CsvBindByName val baseOrbProg: Double = 0.0
+
 ): Persistable
 
 /**
@@ -72,7 +77,11 @@ data class Config(
     val houseSystem: HouseSystems,
     val observerPos: ObserverPos,
     val celPoints: List<PersistedCelPoint>,
-    val aspects: List<PersistedAspect>
+    val aspects: List<PersistedAspect>,
+    val baseOrbAspects: Double,
+    val baseOrbMidpoints: Double,
+    val baseOrbHarmonics: Double,
+    val baseOrbProg: Double
 ): Persistable
 
 /**
@@ -80,6 +89,7 @@ data class Config(
  */
 data class PersistedCelPoint(
     val celPoint: CelPoints,
+    val orbPercentage: Int,
     val showInDrawing: Boolean,
     val glyph: String
 )
@@ -89,6 +99,7 @@ data class PersistedCelPoint(
  */
 data class PersistedAspect(
     val aspect: Aspects,
+    val orbPercentage: Int,
     val showInDrawing: Boolean,
     val glyph: String
 )

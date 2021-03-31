@@ -41,6 +41,7 @@ class ConfigDao(private val configMapper: ConfigMapper): Dao() {
         } else mutableListOf()
     }
 
+
     override fun defineItemType(item: Persistable): Persistable {
         return item as Config
     }
@@ -68,14 +69,16 @@ class ConfigMapper(private val celPointsTextMapper: CelPointsTextMapper, private
         val celPoints = celPointsTextMapper.createCelPoints(persConfig.celPointsText)
         val aspects = aspectsTextMapper.createAspects(persConfig.aspectsText)
         return Config(persConfig.id, persConfig.name, persConfig.description, persConfig.ayanamsha,
-            persConfig.houseSystem, persConfig.observerPos, celPoints, aspects)
+            persConfig.houseSystem, persConfig.observerPos, celPoints, aspects, persConfig.baseOrbAspects,
+            persConfig.baseOrbMidpoints, persConfig.baseOrbHarmonics, persConfig.baseOrbProg)
     }
 
     private fun config2PersistedConfig(config: Config): PersistedConfig {
         val pointsText = celPointsTextMapper.createText(config.celPoints)
         val aspectsText = aspectsTextMapper.createText(config.aspects)
         return PersistedConfig(config.id, config.name, config.description, config.ayanamsha, config.houseSystem,
-            config.observerPos, pointsText, aspectsText)
+            config.observerPos, pointsText, aspectsText, config.baseOrbAspects, config.baseOrbMidpoints,
+            config.baseOrbHarmonics, config.baseOrbProg)
     }
 
 }
@@ -105,12 +108,14 @@ class CelPointsTextMapper {
     }
 
     private fun convertPointToText(persPoint: PersistedCelPoint): String {
-        return persPoint.celPoint.name + itemSep + persPoint.showInDrawing.toString() + itemSep + persPoint.glyph
+        return persPoint.celPoint.name + itemSep + persPoint.orbPercentage.toString() + itemSep +
+                persPoint.showInDrawing.toString() + itemSep + persPoint.glyph
     }
 
     private fun convertTextToPoint(pointText: String): PersistedCelPoint {
         val pointItems = pointText.split(itemSep)
-        return PersistedCelPoint(CelPoints.valueOf(pointItems[0]), pointItems[1] == "true", pointItems[2])
+        return PersistedCelPoint(CelPoints.valueOf(pointItems[0]), pointItems[1].toInt(),
+            pointItems[2] == "true", pointItems[3])
     }
 
 }
@@ -140,11 +145,13 @@ class AspectsTextMapper {
     }
 
     private fun convertAspectToText(persAspect: PersistedAspect): String {
-        return persAspect.aspect.name + itemSep + persAspect.showInDrawing.toString() + itemSep + persAspect.glyph
+        return persAspect.aspect.name + itemSep + persAspect.orbPercentage.toString() + itemSep +
+                persAspect.showInDrawing.toString() + itemSep + persAspect.glyph
     }
 
     private fun convertTextToAspect(aspectText: String): PersistedAspect {
         val aspectItems = aspectText.split(itemSep)
-        return PersistedAspect(Aspects.valueOf(aspectItems[0]), aspectItems[1] == "true", aspectItems[2])
+        return PersistedAspect(Aspects.valueOf(aspectItems[0]), aspectItems[1].toInt(),
+            aspectItems[2] == "true", aspectItems[3])
     }
 }
