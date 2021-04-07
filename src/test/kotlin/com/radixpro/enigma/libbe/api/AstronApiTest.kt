@@ -9,6 +9,7 @@
 package com.radixpro.enigma.libbe.api
 
 import com.radixpro.enigma.libbe.domain.*
+import io.kotest.assertions.show.platformShow
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -164,7 +165,8 @@ internal class AstronApiTest {
         timeSeries[0].celPoint shouldBe CelPoints.SUN
         timeSeries[0].timePositions[2].first shouldBe (2434406.81736111113 plusOrMinus margin)
         timeSeries[0].timePositions[2].second shouldBe (309.1181602720 plusOrMinus margin)
-
+        timeSeries[1].timePositions[2].second shouldBe (121.7608302949 plusOrMinus margin)
+        timeSeries[2].timePositions[2].second shouldBe (305.8671298280 plusOrMinus margin)
     }
 
 

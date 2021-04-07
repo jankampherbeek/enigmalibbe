@@ -239,11 +239,11 @@ class TimeSeriesHandler(private val celPointCalculator: CelPointCalculator) {
 
     fun calcSimpleTimeSeries(request: Request): TimeSeriesResponse {
         val actRequest = request as TimeSeriesRequest
-        var actJd = actRequest.startJd
         val flags = FlagConstructor.defineFlags(actRequest.observerPos, actRequest.coordinateTypes)
         var comments = ""
         val positionsForAllPoints = mutableListOf<TimeSeriesValues>()
         for (celPoint in actRequest.celPoints) {
+            var actJd = actRequest.startJd
             val positionsForPoint = mutableListOf<Pair<Double, Double>>()
             for (i in 0 until actRequest.repeats) {
                 val result =
