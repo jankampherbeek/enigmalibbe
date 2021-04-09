@@ -12,6 +12,7 @@ import com.radixpro.enigma.libbe.api.*
 import com.radixpro.enigma.libbe.astron.*
 import com.radixpro.enigma.libbe.domain.*
 import swisseph.SweConst
+import swisseph.SweDate
 import kotlin.Double.Companion.NaN
 
 abstract class ChartHandler(private val celPointCalculator: CelPointCalculator,
@@ -231,6 +232,36 @@ class DateTimeHandler(private val julianDayNr: JulianDayNr) {
     fun isValidDate(request: Request): Boolean {
         val actRequest = request as ValidDateRequest
         return julianDayNr.isValidDate(actRequest.year, actRequest.month, actRequest.day, actRequest.gregorian)
+    }
+
+    /**
+     * Returns a formatted text for the date and time that belons to a Julian day numer.
+     * Format is yyyy/mm/dd hh:mm:ss, leading zero's are shown.
+     */
+    fun jdUtToDateTimeTxt(request: Request): SingleStringResponse {
+        var dateTxt = ""
+        var comments = ""
+        var errors = false
+        request as DateTimeTxtRequest
+        try {
+            val sweDate = SweDate(request.jd, request.gregorian)
+            val yearTxt = sweDate.year.toString().padStart(4, '0')
+            val monthTxt = sweDate.month.toString().padStart(2, '0')
+            val daytxt = sweDate.day.toString().padStart(2, '0')
+            val hours = sweDate.hour.toInt()
+            val hourFraction = sweDate.hour - hours
+            val minutes = (hourFraction * 60.0).toInt()
+            val minuteFraction = hourFraction - (minutes / 60.0)
+            val seconds = (minuteFraction * 3600.0).toInt()
+            val hourTxt = hours.toString().padStart(2, '0')
+            val minuteTxt = minutes.toString().padStart(2, '0')
+            val secondTxt = seconds.toString().padStart(2, '0')
+            dateTxt = "$yearTxt/$monthTxt/$daytxt $hourTxt:$minuteTxt:$secondTxt"
+        } catch(e: Exception) {
+            errors = true
+            comments = "Error when converting jd to datetext/time. Input: " + request.jd + " and gregorian is " + request.gregorian
+        }
+        return SingleStringResponse(dateTxt, errors, comments)
     }
 }
 

@@ -40,6 +40,11 @@ data class JdUtRequest(val dateTimeParts: DateTimeParts): Request
 data class ValidDateRequest(val year:Int, val month: Int, val day: Int, val gregorian: Boolean): Request
 
 /**
+ * Request to construct a formatted text for a date and time, given a Julian Day Number.
+ */
+data class DateTimeTxtRequest(val jd: Double, val gregorian: Boolean): Request
+
+/**
  * Request for the calculation of a chart.
  */
 data class ChartRequest(val chartRequestType: ChartRequestTypes,val jdUt: Double, val celPoints: List<CelPoints>,

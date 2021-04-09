@@ -147,6 +147,17 @@ internal class AstronApiTest {
     }
 
     @Test
+    fun `IT for constructing a text with date and time for a given Julian Day should give a correct result`() {
+        val request = DateTimeTxtRequest(2434406.8177083335222222, true)
+        val expected = "1953/01/29 07:37:30"
+        val response = api.constructDateTimeFromJd(request)
+        response.errors shouldBe false
+        response.comments shouldBe ""
+        response.result shouldBe expected
+    }
+
+
+    @Test
     fun `IT for calculating a TimeSeries of positions should return the correct results`() {
         val startJd = 2434404.8173611113
         val location = Location(52.216666666667, 6.54)

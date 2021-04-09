@@ -32,6 +32,15 @@ data class SingleDoubleResponse(
 ) : Response
 
 /**
+ * Response for a single text.
+ */
+data class SingleStringResponse(
+    override val result: String,
+    override val errors: Boolean,
+    override val comments: String
+) : Response
+
+/**
  * Response for a calculated Base Chart.
  */
 data class ChartResponse(

@@ -65,6 +65,15 @@ class AstronApi {
         return timeSeriesHandler.calcSimpleTimeSeries(request)
     }
 
+    /**
+     * Constructs string with date and time for the given Julian Day.
+     * Format: yyyy/mm/dd hh:mm:ss .  Leading zero's are shown.
+     */
+    fun constructDateTimeFromJd(request: DateTimeTxtRequest): SingleStringResponse {
+        val dateTimeHandler = Injector.injectDateTimeHandler()
+        return dateTimeHandler.jdUtToDateTimeTxt(request)
+    }
+
 }
 
 /**
