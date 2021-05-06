@@ -281,7 +281,7 @@ class TimeSeriesHandler(private val celPointCalculator: CelPointCalculator) {
                     celPointCalculator.calcMainPositionsForCelPoint(actJd, celPoint.seId, flags, actRequest.location)
                 comments += result.second
                 positionsForPoint.add(Pair(actJd, result.first[0]))
-                actJd++
+                actJd+= request.interval
             }
             positionsForAllPoints.add(TimeSeriesValues(celPoint, positionsForPoint))
         }
